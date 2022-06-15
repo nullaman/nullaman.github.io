@@ -1,0 +1,789 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/bgtop.png">
+  <link rel="icon" href="/img/bgtop.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="aman">
+  <meta name="keywords" content="aman">
+  
+    <meta name="description" content="装饰器模式-Java设计模式(四)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="装饰器模式-Java设计模式(四)">
+<meta property="og:url" content="http://nullaman.com/2019/12/04/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/index.html">
+<meta property="og:site_name" content="aman">
+<meta property="og:description" content="装饰器模式-Java设计模式(四)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://nullaman.com/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/%E4%BA%9A%E7%B4%A2%E8%BE%93%E5%87%BA.png">
+<meta property="og:image" content="http://nullaman.com/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/LOL-UML1.png">
+<meta property="og:image" content="http://nullaman.com/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/LOL-UML2.png">
+<meta property="og:image" content="http://nullaman.com/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/%E6%89%A9%E5%AE%B9%E8%BE%93%E5%87%BA.png">
+<meta property="og:image" content="http://nullaman.com/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/4X%E8%BE%93%E5%87%BA.png">
+<meta property="og:image" content="http://nullaman.com/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/8X%E8%BE%93%E5%87%BA.png">
+<meta property="og:image" content="http://nullaman.com/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/PUBG-UML1.png">
+<meta property="og:image" content="http://nullaman.com/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/PUBG-UML2.png">
+<meta property="og:image" content="http://nullaman.com/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/JDK%E4%B8%ADInputStream.png">
+<meta property="article:published_time" content="2019-12-04T04:36:55.000Z">
+<meta property="article:modified_time" content="2022-06-08T06:39:18.596Z">
+<meta property="article:author" content="aman">
+<meta property="article:tag" content="Java设计模式">
+<meta property="article:tag" content="装饰器模式">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://nullaman.com/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/%E4%BA%9A%E7%B4%A2%E8%BE%93%E5%87%BA.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>装饰器模式-Java设计模式(四) - aman</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"nullaman.com","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>aman</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="装饰器模式-Java设计模式(四)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        aman
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-12-04 12:36" pubdate>
+          2019年12月4日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          61 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">装饰器模式-Java设计模式(四)</h1>
+            
+            <div class="markdown-body">
+              
+              <p>装饰器模式-Java设计模式(四)</p>
+<span id="more"></span>
+
+<h1 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h1><blockquote>
+<p>为已有的功能，动态地添加更多功能的一种方式。<br>动态地给一个对象添加一些额外的职责。就增加功能来说，装饰器模式相比生成子类更为灵活。</p>
+</blockquote>
+<h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><blockquote>
+<p>当系统中需要新加功能时，是向旧的类中添加新的代码。这些新的代码通常装饰了原有的核心职责或主要行为，在主类中加入新的字段，新的方法和逻辑，从而增加了主类的复杂度，而新的东西仅仅只是为了满足一些特定情况下才会执行的特殊行为需要。<br>ps:例如【LOL英雄&#x2F;技能】【Pubg中枪&#x2F;配件】</p>
+</blockquote>
+<h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><blockquote>
+<p>优点：装饰类和被装饰类可以独立发展，不会相互耦合，装饰模式是继承的一个替代模式，装饰模式可以动态扩展一个实现类的功能。<br>缺点：多层装饰比较复杂。</p>
+</blockquote>
+<hr>
+<hr>
+<h1 id="代码-amp-结构图-LOL"><a href="#代码-amp-结构图-LOL" class="headerlink" title="代码 &amp; 结构图(LOL)"></a>代码 &amp; 结构图(LOL)</h1><h2 id="【英雄】接口"><a href="#【英雄】接口" class="headerlink" title="【英雄】接口"></a>【英雄】接口</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 英雄接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Hero</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 学习技能</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">learnSkills</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="【具体英雄】类，实现英雄接口"><a href="#【具体英雄】类，实现英雄接口" class="headerlink" title="【具体英雄】类，实现英雄接口"></a>【具体英雄】类，实现英雄接口</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 具体英雄类，实现英雄接口</span><br><span class="hljs-comment"> * - 亚索</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Yasso</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Hero</span> &#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 英雄名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String name;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Yasso</span><span class="hljs-params">(String name)</span> &#123;<br>        <span class="hljs-built_in">this</span>.name = name;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">learnSkills</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(name + <span class="hljs-string">&quot;学习了以上技能。&quot;</span>);<br>    &#125;<br>    <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="【技能栏】类，实现英雄接口"><a href="#【技能栏】类，实现英雄接口" class="headerlink" title="【技能栏】类，实现英雄接口"></a>【技能栏】类，实现英雄接口</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 技能栏类，实现英雄接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Skills</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Hero</span> &#123;<br><br>    <span class="hljs-keyword">private</span> Hero hero;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Skills</span><span class="hljs-params">(Hero hero)</span> &#123;<br>        <span class="hljs-built_in">this</span>.hero = hero;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">learnSkills</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">if</span> (hero != <span class="hljs-literal">null</span>) &#123;<br>            hero.learnSkills();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="【技能】QWER类，继承技能栏类"><a href="#【技能】QWER类，继承技能栏类" class="headerlink" title="【技能】QWER类，继承技能栏类"></a>【技能】QWER类，继承技能栏类</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 技能Q ，继承技能栏类</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Q</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Skills</span> &#123;<br><br>    <span class="hljs-keyword">private</span> String skillName;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Q</span><span class="hljs-params">(Hero hero, String skillName)</span> &#123;<br>        <span class="hljs-built_in">super</span>(hero);<br>        <span class="hljs-built_in">this</span>.skillName = skillName;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">learnSkills</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;学习了技能Q:&quot;</span> + skillName);<br>        <span class="hljs-built_in">super</span>.learnSkills();<br>    &#125;<br>    <br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 技能W ，继承技能栏类</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">W</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Skills</span> &#123;<br><br>    <span class="hljs-keyword">private</span> String skillName;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">W</span><span class="hljs-params">(Hero hero, String skillName)</span> &#123;<br>        <span class="hljs-built_in">super</span>(hero);<br>        <span class="hljs-built_in">this</span>.skillName = skillName;<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">learnSkills</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;学习了技能W:&quot;</span> + skillName);<br>        <span class="hljs-built_in">super</span>.learnSkills();<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 技能E ，继承技能栏类</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">E</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Skills</span> &#123;<br><br>    <span class="hljs-keyword">private</span> String skillName;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">E</span><span class="hljs-params">(Hero hero, String skillName)</span> &#123;<br>        <span class="hljs-built_in">super</span>(hero);<br>        <span class="hljs-built_in">this</span>.skillName = skillName;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">learnSkills</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;学习了技能E:&quot;</span> + skillName);<br>        <span class="hljs-built_in">super</span>.learnSkills();<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 技能R ，继承技能栏类</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">R</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Skills</span> &#123;<br><br>    <span class="hljs-keyword">private</span> String skillName;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">R</span><span class="hljs-params">(Hero hero, String skillName)</span> &#123;<br>        <span class="hljs-built_in">super</span>(hero);<br>        <span class="hljs-built_in">this</span>.skillName = skillName;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">learnSkills</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;学习了技能R:&quot;</span> + skillName);<br>        <span class="hljs-built_in">super</span>.learnSkills();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="【技能】测试"><a href="#【技能】测试" class="headerlink" title="【技能】测试"></a>【技能】测试</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">// 创建叫亚索的英雄</span><br>        <span class="hljs-type">Hero</span> <span class="hljs-variable">yasso</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Yasso</span>(<span class="hljs-string">&quot;亚索&quot;</span>);<br><br>        <span class="hljs-type">Skills</span> <span class="hljs-variable">skills</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Skills</span>(yasso);<br>        <br>        <span class="hljs-type">Skills</span> <span class="hljs-variable">q</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Q</span>(skills, <span class="hljs-string">&quot;斩钢闪&quot;</span>);<br>        q.learnSkills();<br>        System.out.println(<span class="hljs-string">&quot;-----1------分割线----------&quot;</span>);<br>        <span class="hljs-type">Skills</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">E</span>(q, <span class="hljs-string">&quot;风盾&quot;</span>);<br>        e.learnSkills();<br>        System.out.println(<span class="hljs-string">&quot;-----2------分割线----------&quot;</span>);<br>        <span class="hljs-type">Skills</span> <span class="hljs-variable">w</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">W</span>(e, <span class="hljs-string">&quot;踏前斩&quot;</span>);<br>        w.learnSkills();<br>        System.out.println(<span class="hljs-string">&quot;-----3------分割线----------&quot;</span>);<br>        <span class="hljs-type">Skills</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">R</span>(w, <span class="hljs-string">&quot;狂风绝熄斩&quot;</span>);<br>        r.learnSkills();<br>        System.out.println(<span class="hljs-string">&quot;-----4------分割线----------&quot;</span>);<br>        <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="测试输出"><a href="#测试输出" class="headerlink" title="测试输出"></a>测试输出</h2><p><img src="/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/%E4%BA%9A%E7%B4%A2%E8%BE%93%E5%87%BA.png" srcset="/img/loading.gif" lazyload alt="图片加载"></p>
+<h2 id="UML结构图"><a href="#UML结构图" class="headerlink" title="UML结构图"></a>UML结构图</h2><p><img src="/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/LOL-UML1.png" srcset="/img/loading.gif" lazyload alt="图片加载"><br><img src="/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/LOL-UML2.png" srcset="/img/loading.gif" lazyload alt="图片加载"></p>
+<hr>
+<hr>
+<h1 id="代码-amp-结构图-Pubg"><a href="#代码-amp-结构图-Pubg" class="headerlink" title="代码 &amp; 结构图(Pubg)"></a>代码 &amp; 结构图(Pubg)</h1><h2 id="【枪】"><a href="#【枪】" class="headerlink" title="【枪】"></a>【枪】</h2><h3 id="【枪】接口"><a href="#【枪】接口" class="headerlink" title="【枪】接口"></a>【枪】接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 枪接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Gun</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 开火</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">fire</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="【具体枪】类，继承枪接口"><a href="#【具体枪】类，继承枪接口" class="headerlink" title="【具体枪】类，继承枪接口"></a>【具体枪】类，继承枪接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * M416类，实现枪接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">M416</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Gun</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">fire</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;突突突···开火*30&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="【扩容弹夹】"><a href="#【扩容弹夹】" class="headerlink" title="【扩容弹夹】"></a>【扩容弹夹】</h2><h3 id="【扩容弹夹】抽象类，继承枪接口"><a href="#【扩容弹夹】抽象类，继承枪接口" class="headerlink" title="【扩容弹夹】抽象类，继承枪接口"></a>【扩容弹夹】抽象类，继承枪接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 扩容弹夹抽象类，实现枪接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AbstractMagazine</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Gun</span> &#123;<br><br>    <span class="hljs-keyword">private</span> Gun gun;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">AbstractMagazine</span><span class="hljs-params">(Gun gun)</span> &#123;<br>        <span class="hljs-built_in">this</span>.gun = gun;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">fire</span><span class="hljs-params">()</span> &#123;<br>        gun.fire();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="【扩容弹夹】实现类，继承扩容弹夹抽象类"><a href="#【扩容弹夹】实现类，继承扩容弹夹抽象类" class="headerlink" title="【扩容弹夹】实现类，继承扩容弹夹抽象类"></a>【扩容弹夹】实现类，继承扩容弹夹抽象类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 扩容弹夹实现类，继承扩容弹夹抽象类</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Magazine</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractMagazine</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Magazine</span><span class="hljs-params">(Gun gun)</span> &#123;<br>        <span class="hljs-built_in">super</span>(gun);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">fire</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;突突突···开火*40&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="【扩容弹夹】测试"><a href="#【扩容弹夹】测试" class="headerlink" title="【扩容弹夹】测试"></a>【扩容弹夹】测试</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;【获取：M416】&quot;</span>);<br>        <span class="hljs-type">Gun</span> <span class="hljs-variable">m416</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">M416</span>();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;【上弹开火！】&quot;</span>);<br>        m416.fire();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;【获取：扩容弹夹】&quot;</span>);<br>        m416 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Magazine</span>(m416);<br>        m416.fire();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="测试输出-1"><a href="#测试输出-1" class="headerlink" title="测试输出"></a>测试输出</h3><p><img src="/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/%E6%89%A9%E5%AE%B9%E8%BE%93%E5%87%BA.png" srcset="/img/loading.gif" lazyload alt="图片加载"></p>
+<hr>
+<h2 id="新增【4倍镜】"><a href="#新增【4倍镜】" class="headerlink" title="新增【4倍镜】"></a>新增【4倍镜】</h2><h3 id="增加需求：【4倍镜】"><a href="#增加需求：【4倍镜】" class="headerlink" title="增加需求：【4倍镜】"></a>增加需求：【4倍镜】</h3><blockquote>
+<p>这是之前没有的功能，新增接口Aim4X</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 4倍镜接口，实现枪接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Aim4X</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Gun</span>&#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">aim4X</span><span class="hljs-params">()</span>;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 4倍镜抽象类，实现4倍镜接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Abstract4X</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Aim4X</span> &#123;<br><br>    <span class="hljs-keyword">private</span> Gun gun;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Abstract4X</span><span class="hljs-params">(Gun gun)</span> &#123;<br>        <span class="hljs-built_in">this</span>.gun = gun;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">fire</span><span class="hljs-params">()</span> &#123;<br>        gun.fire();<br>    &#125;<br><br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 虚假的4倍镜类，继承4倍镜抽象类</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Ostensible4X</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Abstract4X</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Ostensible4X</span><span class="hljs-params">(Gun gun)</span> &#123;<br>        <span class="hljs-built_in">super</span>(gun);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">aim4X</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;装上了虚假的4倍，描边枪法。&quot;</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 真实的4倍镜类，继承4倍镜抽象类</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Real4X</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Abstract4X</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Real4X</span><span class="hljs-params">(Gun gun)</span> &#123;<br>        <span class="hljs-built_in">super</span>(gun);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">aim4X</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;装上了真实的4倍，突突突百发百中。&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="【4倍镜】测试"><a href="#【4倍镜】测试" class="headerlink" title="【4倍镜】测试"></a>【4倍镜】测试</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;【获取：M416】&quot;</span>);<br>        <span class="hljs-type">Gun</span> <span class="hljs-variable">m416</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">M416</span>();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;【上弹开火！】&quot;</span>);<br>        m416.fire();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;【获取：扩容弹夹】&quot;</span>);<br>        m416 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Magazine</span>(m416);<br>        m416.fire();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;【获取：虚假的4倍】&quot;</span>);<br>        <span class="hljs-comment">// !!!注意!!!</span><br>        <span class="hljs-type">Aim4X</span> <span class="hljs-variable">aim4X</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Ostensible4X</span>(m416);<br>        <br>        aim4X.aim4X();<br>        aim4X.fire();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;【获取：虚假的4倍】&quot;</span>);<br>        aim4X = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Real4X</span>(m416);<br>        aim4X.aim4X();<br>        aim4X.fire();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="测试输出-2"><a href="#测试输出-2" class="headerlink" title="测试输出"></a>测试输出</h3><p><img src="/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/4X%E8%BE%93%E5%87%BA.png" srcset="/img/loading.gif" lazyload alt="图片加载"></p>
+<hr>
+<h2 id="新增【8倍镜】"><a href="#新增【8倍镜】" class="headerlink" title="新增【8倍镜】"></a>新增【8倍镜】</h2><h3 id="增加需求：【8倍镜】，它具有4倍瞄准功能，也具有8倍瞄准功能。"><a href="#增加需求：【8倍镜】，它具有4倍瞄准功能，也具有8倍瞄准功能。" class="headerlink" title="增加需求：【8倍镜】，它具有4倍瞄准功能，也具有8倍瞄准功能。"></a>增加需求：【8倍镜】，它具有4倍瞄准功能，也具有8倍瞄准功能。</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 8倍接口，继承4倍接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Aim8X</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Aim4X</span>&#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">aim8X</span><span class="hljs-params">()</span>;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 8倍抽象类，实现8倍接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Abstract8X</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Aim8X</span> &#123;<br><br>    <span class="hljs-keyword">private</span> Gun gun;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Abstract8X</span><span class="hljs-params">(Gun gun)</span> &#123;<br>        <span class="hljs-built_in">this</span>.gun = gun;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">fire</span><span class="hljs-params">()</span> &#123;<br>        gun.fire();<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 8倍类，继承8倍抽象类</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">End8X</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Abstract8X</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">End8X</span><span class="hljs-params">(Gun gun)</span> &#123;<br>        <span class="hljs-built_in">super</span>(gun);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">aim4X</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;8X---&gt;4X&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">aim8X</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;最终的8X&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="【8倍镜】测试"><a href="#【8倍镜】测试" class="headerlink" title="【8倍镜】测试"></a>【8倍镜】测试</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;【获取：M416】&quot;</span>);<br>        <span class="hljs-type">Gun</span> <span class="hljs-variable">m416</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">M416</span>();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;【上弹开火！】&quot;</span>);<br>        m416.fire();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;【获取：扩容弹夹】&quot;</span>);<br>        m416 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Magazine</span>(m416);<br>        m416.fire();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;【获取：虚假的4倍】&quot;</span>);<br>        <span class="hljs-comment">// !!!注意!!!</span><br>        <span class="hljs-type">Aim4X</span> <span class="hljs-variable">aim4X</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Ostensible4X</span>(m416);<br>        <br>        aim4X.aim4X();<br>        aim4X.fire();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;【获取：虚假的4倍】&quot;</span>);<br>        aim4X = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Real4X</span>(m416);<br>        aim4X.aim4X();<br>        aim4X.fire();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;【获取：8X】&quot;</span>);<br>        <span class="hljs-comment">// !!!注意!!!</span><br>        <span class="hljs-type">Aim8X</span> <span class="hljs-variable">aim8X</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">End8X</span>(aim4X);<br>        <br>        aim8X.aim8X();<br>        aim8X.aim4X();<br>        aim8X.fire();<br>        System.out.println(<span class="hljs-string">&quot;--------分割线---------&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="测试输出-3"><a href="#测试输出-3" class="headerlink" title="测试输出"></a>测试输出</h3><p><img src="/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/8X%E8%BE%93%E5%87%BA.png" srcset="/img/loading.gif" lazyload alt="图片加载"></p>
+<hr>
+<h2 id="UML图"><a href="#UML图" class="headerlink" title="UML图"></a>UML图</h2><p><img src="/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/PUBG-UML1.png" srcset="/img/loading.gif" lazyload alt="图片加载"><br><img src="/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/PUBG-UML2.png" srcset="/img/loading.gif" lazyload alt="图片加载"></p>
+<hr>
+<hr>
+<h1 id="源码-decorator分支"><a href="#源码-decorator分支" class="headerlink" title="源码 - decorator分支"></a>源码 - decorator分支</h1><blockquote>
+<p>不同分支对应不同设计模式源码<br><a target="_blank" rel="noopener" href="https://github.com/nullaman/JavaDesignMode">https://github.com/nullaman/JavaDesignMode</a></p>
+</blockquote>
+<h1 id="JDK中的例子"><a href="#JDK中的例子" class="headerlink" title="JDK中的例子"></a>JDK中的例子</h1><p>InputStream<br><img src="/images/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/JDK%E4%B8%ADInputStream.png" srcset="/img/loading.gif" lazyload alt="图片加载"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">#Java设计模式</a>
+      
+        <a href="/tags/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/">#装饰器模式</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>装饰器模式-Java设计模式(四)</div>
+      <div>http://nullaman.com/2019/12/04/装饰器模式-Java设计模式(四)/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>aman</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年12月4日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/12/05/zxing%E4%B8%8B%E8%BD%BD%E4%BA%8C%E7%BB%B4%E7%A0%81/" title="zxing下载二维码">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">zxing下载二维码</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/12/03/JRebel%E7%83%AD%E9%83%A8%E7%BD%B2/" title="JRebel热部署">
+                        <span class="hidden-mobile">JRebel热部署</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/nullaman" target="_blank" rel="nofollow noopener"><span>阿瞒</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/nullaman" target="_blank" rel="nofollow noopener"><span>aman</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

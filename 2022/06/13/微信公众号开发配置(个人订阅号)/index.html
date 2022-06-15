@@ -1,0 +1,821 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/bgtop.png">
+  <link rel="icon" href="/img/bgtop.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="aman">
+  <meta name="keywords" content="aman">
+  
+    <meta name="description" content="好多年前申请了一个微信公众号，都冻结好几回了，之前看到朋友在弄，我也尝试弄一个看看。【简洁版】">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信公众号开发配置(个人订阅号)">
+<meta property="og:url" content="http://nullaman.com/2022/06/13/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/index.html">
+<meta property="og:site_name" content="aman">
+<meta property="og:description" content="好多年前申请了一个微信公众号，都冻结好几回了，之前看到朋友在弄，我也尝试弄一个看看。【简洁版】">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://nullaman.com/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%B2%98%E8%B4%B4%E4%BF%AE%E6%94%B9.jpg">
+<meta property="og:image" content="http://nullaman.com/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/%E5%AF%86%E9%92%A5%E9%85%8D%E7%BD%AE%E6%9F%A5%E7%9C%8B.png">
+<meta property="og:image" content="http://nullaman.com/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/%E5%A1%AB%E5%86%99%E5%85%AC%E4%BC%97%E5%8F%B7%E9%85%8D%E7%BD%AE1.png">
+<meta property="og:image" content="http://nullaman.com/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/%E8%87%AA%E6%B5%8B%E4%BB%A3%E7%A0%811.png">
+<meta property="og:image" content="http://nullaman.com/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85.png">
+<meta property="article:published_time" content="2022-06-13T06:19:10.000Z">
+<meta property="article:modified_time" content="2022-06-13T07:30:27.396Z">
+<meta property="article:author" content="aman">
+<meta property="article:tag" content="微信公众号">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://nullaman.com/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%B2%98%E8%B4%B4%E4%BF%AE%E6%94%B9.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>微信公众号开发配置(个人订阅号) - aman</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"nullaman.com","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>aman</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="微信公众号开发配置(个人订阅号)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        aman
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-13 14:19" pubdate>
+          2022年6月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          15 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">微信公众号开发配置(个人订阅号)</h1>
+            
+            <div class="markdown-body">
+              
+              <p>好多年前申请了一个微信公众号，都冻结好几回了，之前看到朋友在弄，我也尝试弄一个看看。【简洁版】</p>
+<span id="more"></span>
+
+<h1 id="一、公众号"><a href="#一、公众号" class="headerlink" title="一、公众号"></a>一、公众号</h1><h2 id="1-申请"><a href="#1-申请" class="headerlink" title="1.申请"></a>1.申请</h2><p>这个还是需要去到官方，自行申请使用</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/">https://mp.weixin.qq.com/</a></p>
+</blockquote>
+<h2 id="2-文档"><a href="#2-文档" class="headerlink" title="2.文档"></a>2.文档</h2><p>官方文档，建议阅读一下，也可以跳过，先按照步骤配置部署，后续再看</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Overview.html">https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Overview.html</a></p>
+</blockquote>
+<h1 id="二、Java代码"><a href="#二、Java代码" class="headerlink" title="二、Java代码"></a>二、Java代码</h1><h2 id="1-初始代码"><a href="#1-初始代码" class="headerlink" title="1.初始代码"></a>1.初始代码</h2><p>官方提供非常方便的初始化代码。clone到本地，打开</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/binarywang/weixin-java-mp-demo">https://github.com/binarywang/weixin-java-mp-demo</a></p>
+</blockquote>
+<h2 id="2-修改代码"><a href="#2-修改代码" class="headerlink" title="2.修改代码"></a>2.修改代码</h2><h3 id="2-1-文件准备"><a href="#2-1-文件准备" class="headerlink" title="2.1.文件准备"></a>2.1.文件准备</h3><ul>
+<li>复制application.yml.template模板文件，粘贴为application.yml<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%B2%98%E8%B4%B4%E4%BF%AE%E6%94%B9.jpg" srcset="/img/loading.gif" lazyload alt="配置文件粘贴修改.jpg"></li>
+</ul>
+<h3 id="2-2-登录公众号官网"><a href="#2-2-登录公众号官网" class="headerlink" title="2.2.登录公众号官网"></a>2.2.登录公众号官网</h3><ul>
+<li>查看帐号appId，secret，token，aesKey(测试帐号无)<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/%E5%AF%86%E9%92%A5%E9%85%8D%E7%BD%AE%E6%9F%A5%E7%9C%8B.png" srcset="/img/loading.gif" lazyload alt="密钥配置查看.png"></li>
+</ul>
+<blockquote>
+<p>测试帐号是没有aesKey，不需要配置可以空，token可以自定义，测试为明文易于开发</p>
+</blockquote>
+<h3 id="2-3-修改application-yml"><a href="#2-3-修改application-yml" class="headerlink" title="2.3.修改application.yml"></a>2.3.修改application.yml</h3><ul>
+<li>将官网配置填入<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/%E5%A1%AB%E5%86%99%E5%85%AC%E4%BC%97%E5%8F%B7%E9%85%8D%E7%BD%AE1.png" srcset="/img/loading.gif" lazyload alt="填写公众号配置1.png"></li>
+</ul>
+<h3 id="2-4-自定义服务端口"><a href="#2-4-自定义服务端口" class="headerlink" title="2.4.自定义服务端口"></a>2.4.自定义服务端口</h3><ul>
+<li>因为默认启动端口是8080，部署的时候可能被占用，所以可以提前修改<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-string">xxxx</span> <span class="hljs-comment"># 填你的端口号</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-5-新增本地测试接口"><a href="#2-5-新增本地测试接口" class="headerlink" title="2.5 新增本地测试接口"></a>2.5 新增本地测试接口</h3><ul>
+<li>因为部署配置的时候，微信会发送请求来核验服务情况（详情阅读<a target="_blank" rel="noopener" href="https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Overview.html">官方文档</a>），自定义接口你可以提前自测服务是否有成功启动。</li>
+</ul>
+<p>可以直接新增到WxPortalController中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@GetMapping(value = &quot;/test&quot;, produces = &quot;text/plain;charset=utf-8&quot;)</span><br><span class="hljs-keyword">public</span> String <span class="hljs-title function_">authGet</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable</span> String appid)</span> &#123;<br>    <span class="hljs-keyword">return</span> appid;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><img src="/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/%E8%87%AA%E6%B5%8B%E4%BB%A3%E7%A0%811.png" srcset="/img/loading.gif" lazyload alt="自测代码1.png"></p>
+<blockquote>
+<p>注意这个请求本地访问为 <a href="http://localhost:【port】/wx/portal/{appid}/test">http://localhost:【port】/wx/portal/{appid}/test</a><br>路径中的[produces]这个属性是字符解码防止乱码，而不是路径</p>
+</blockquote>
+<h1 id="三、服务器"><a href="#三、服务器" class="headerlink" title="三、服务器"></a>三、服务器</h1><p>自行准备：</p>
+<ul>
+<li>1.Java运行环境</li>
+</ul>
+<p>需要：</p>
+<ul>
+<li>1.Java项目部署jar包</li>
+<li>2.nginx（开发者测试appid的不需要，正式的微信只支持80端口和443端口）</li>
+</ul>
+<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><h3 id="1-项目打包"><a href="#1-项目打包" class="headerlink" title="1.项目打包"></a>1.项目打包</h3><ul>
+<li>通过idea中的Maven插件，install项目，在项目中的target中得到，xxxx.jar<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85.png" srcset="/img/loading.gif" lazyload alt="项目打包.png"></li>
+</ul>
+<h3 id="2-将xx-jar上传服务器启动"><a href="#2-将xx-jar上传服务器启动" class="headerlink" title="2.将xx.jar上传服务器启动"></a>2.将xx.jar上传服务器启动</h3><ul>
+<li><p>可以通过MobaXterm，xshell，命令等方式，上传到服务器（建议目录&#x2F;usr&#x2F;local&#x2F;xxx下）</p>
+<blockquote>
+<p>命令: java -jar xxx.jar &gt; xxx.file 2&gt;&amp;1 &amp;</p>
+</blockquote>
+</li>
+<li><p>命令执行为jar包启动，日志输出在指定文件下</p>
+</li>
+</ul>
+<h2 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ul>
+<li>自行网上查找教程这里不多赘述</li>
+</ul>
+<h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><ul>
+<li>找到nginx安装目录下 nginx&#x2F;conf&#x2F;nginx.conf</li>
+</ul>
+<ol>
+<li><p>备份配置文件</p>
+<blockquote>
+<p>cp nginx.conf nginx_bak.conf</p>
+</blockquote>
+</li>
+<li><p>配置Java转发</p>
+<blockquote>
+<p>vi nginx.conf</p>
+</blockquote>
+</li>
+<li><p>配置详情<br>在http-server下面加入。【需要自行修改】</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 自行修改【gzh】：这里是转发的路径，比如ip/gzh会转发到proxy_pass中配置的路径</span><br>location /gzh/ &#123;<br>     <span class="hljs-comment"># 截去gzh - 自行修改</span><br>     rewrite ^.+gzh/?(.*)$ /<span class="hljs-variable">$1</span> <span class="hljs-built_in">break</span>;<br>     <span class="hljs-comment"># 自己的项目地址及端口号 - 记得修改</span><br>     proxy_pass  http://127.0.0.1:【port】;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<p>4.重启nginx</p>
+<blockquote>
+<p>进入目录：cd nginx&#x2F;sbin<br>执行：.&#x2F;nginx -s reload</p>
+</blockquote>
+<h1 id="四-公众号官网配置"><a href="#四-公众号官网配置" class="headerlink" title="四.公众号官网配置"></a>四.公众号官网配置</h1><ul>
+<li>注意：因为配置了nginx转发，如果上方加了【gzh】那么路径为</li>
+</ul>
+<blockquote>
+<p>http:&#x2F;&#x2F;【服务器ip】&#x2F;【gzh或你自定义的】&#x2F;wx&#x2F;portal&#x2F;【填你的AppID】</p>
+</blockquote>
+<p>配置点击完成查看服务器运行日志</p>
+<blockquote>
+<p>cat xxx.file</p>
+</blockquote>
+<p>看到打印了成功接收到微信的消息就没有问题</p>
+<p>补充：持续打印日志</p>
+<blockquote>
+<p>tail -f xxx.file</p>
+</blockquote>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/">#微信公众号</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>微信公众号开发配置(个人订阅号)</div>
+      <div>http://nullaman.com/2022/06/13/微信公众号开发配置(个人订阅号)/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>aman</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月13日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/15/Spring%E4%B8%93%E9%A2%98-%E7%9F%A5%E8%AF%86%E7%82%B9/" title="Spring专题-知识点">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Spring专题-知识点</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/09/Spring%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E5%9B%BE(%E4%B8%80)/" title="Spring源码解析图(一)">
+                        <span class="hidden-mobile">Spring源码解析图(一)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/nullaman" target="_blank" rel="nofollow noopener"><span>阿瞒</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/nullaman" target="_blank" rel="nofollow noopener"><span>aman</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

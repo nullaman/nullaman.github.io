@@ -1,0 +1,732 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/bgtop.png">
+  <link rel="icon" href="/img/bgtop.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="aman">
+  <meta name="keywords" content="aman">
+  
+    <meta name="description" content="今天改需求看到之前写的zxing二维码，记录一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zxing下载二维码">
+<meta property="og:url" content="http://nullaman.com/2019/12/05/zxing%E4%B8%8B%E8%BD%BD%E4%BA%8C%E7%BB%B4%E7%A0%81/index.html">
+<meta property="og:site_name" content="aman">
+<meta property="og:description" content="今天改需求看到之前写的zxing二维码，记录一下。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-12-05T09:19:50.000Z">
+<meta property="article:modified_time" content="2022-05-18T02:42:16.456Z">
+<meta property="article:author" content="aman">
+<meta property="article:tag" content="二维码">
+<meta property="article:tag" content="ZXing">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>zxing下载二维码 - aman</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"nullaman.com","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>aman</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="zxing下载二维码"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        aman
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-12-05 17:19" pubdate>
+          2019年12月5日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          55 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">zxing下载二维码</h1>
+            
+            <div class="markdown-body">
+              
+              <p>今天改需求看到之前写的zxing二维码，记录一下。</p>
+<span id="more"></span>
+
+<h1 id="Maven仓库"><a href="#Maven仓库" class="headerlink" title="Maven仓库"></a>Maven仓库</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.google.zxing<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>core<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.2.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.google.zxing<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>javase<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="简单下载单张"><a href="#简单下载单张" class="headerlink" title="简单下载单张"></a>简单下载单张</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 下载二维码</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> roomId 二维码中存放的的数据</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> request </span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> response</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@throws</span> IOException</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@GetMapping(&quot;/code/download/&#123;roomId&#125;&quot;)</span><br><span class="hljs-meta">@ApiOperation(&quot;二维码下载&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">downloadCode</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable</span> String roomId, HttpServletRequest request, HttpServletResponse response)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>    <span class="hljs-keyword">if</span> (roomId == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// ---------加密内容------------</span><br>    <span class="hljs-comment">// log.info(&quot;------------&gt;要加密的数据roomId:&#123;&#125;&quot;, roomId);</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">content</span> <span class="hljs-operator">=</span> Base64.getEncoder().encodeToString(roomId.toString().getBytes(<span class="hljs-string">&quot;UTF-8&quot;</span>));<br>    <span class="hljs-keyword">if</span> (content != <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-string">&quot;&quot;</span>.equals(content)) &#123;<br>        <span class="hljs-comment">// ----------二维码设置----------</span><br>        <span class="hljs-comment">// 图像宽度</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">width</span> <span class="hljs-operator">=</span> <span class="hljs-number">300</span>;<br>        <span class="hljs-comment">// 图像高度</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">height</span> <span class="hljs-operator">=</span> <span class="hljs-number">300</span>;<br>        <span class="hljs-comment">// 图像类型</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">format</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;png&quot;</span>;<br>        Map&lt;EncodeHintType, Object&gt; hints = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;EncodeHintType, Object&gt;(<span class="hljs-number">3</span>);<br>        <span class="hljs-comment">// 编码格式</span><br>        hints.put(EncodeHintType.CHARACTER_SET, <span class="hljs-string">&quot;UTF-8&quot;</span>);<br>        <span class="hljs-comment">// 设置容错等级</span><br>        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);<br>        <span class="hljs-comment">// 设置边距默认是5</span><br>        hints.put(EncodeHintType.MARGIN, <span class="hljs-number">2</span>);<br>        <span class="hljs-type">BitMatrix</span> <span class="hljs-variable">bitMatrix</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">OutputStream</span> <span class="hljs-variable">outputStream</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">InputStream</span> <span class="hljs-variable">inputStream</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            bitMatrix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">QRCodeWriter</span>().encode(content, BarcodeFormat.QR_CODE, width, height, hints);<br>            <span class="hljs-type">BufferedImage</span> <span class="hljs-variable">image</span> <span class="hljs-operator">=</span> MatrixToImageWriter.toBufferedImage(bitMatrix);<br>            <span class="hljs-comment">// 二维码图片转化成字节数组</span><br>            <span class="hljs-type">ByteArrayOutputStream</span> <span class="hljs-variable">out</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayOutputStream</span>();<br>            <span class="hljs-type">boolean</span> <span class="hljs-variable">write</span> <span class="hljs-operator">=</span> ImageIO.write(image, format, out);<br>            inputStream = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayInputStream</span>(out.toByteArray());<br>            outputStream = response.getOutputStream();<br>            response.reset();<br>            <span class="hljs-comment">// 设置文件头编码方式和文件名</span><br>            <span class="hljs-type">String</span> <span class="hljs-variable">date</span> <span class="hljs-operator">=</span> LocalDate.now().toString();<br>            <span class="hljs-type">String</span> <span class="hljs-variable">fileName</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;二维码&quot;</span> + date + <span class="hljs-string">&quot;.png&quot;</span>;<br>            response.setCharacterEncoding(<span class="hljs-string">&quot;UTF-8&quot;</span>);<br>            <span class="hljs-comment">// 如果是IE,通过URLEncoder对filename进行UTF8编码。而其他的浏览器（firefox、chrome、safari、opera），则要通过字节转换成ISO8859-1。</span><br>            <span class="hljs-keyword">if</span> (request.getHeader(<span class="hljs-string">&quot;User-Agent&quot;</span>).toUpperCase().indexOf(<span class="hljs-string">&quot;MSIE&quot;</span>) &gt; <span class="hljs-number">0</span>) &#123;<br>                fileName = URLEncoder.encode(fileName, <span class="hljs-string">&quot;UTF-8&quot;</span>);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                fileName = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(fileName.getBytes(<span class="hljs-string">&quot;UTF-8&quot;</span>), <span class="hljs-string">&quot;ISO8859-1&quot;</span>);<br>            &#125;<br>            response.setContentType(<span class="hljs-string">&quot;application/octet-stream&quot;</span>);<br>            response.setHeader(<span class="hljs-string">&quot;Content-Disposition&quot;</span>, <span class="hljs-string">&quot;attachment;filename=&quot;</span> + fileName);<br>            <span class="hljs-type">byte</span>[] bf = <span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[<span class="hljs-number">1024</span>];<br>            <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>            <span class="hljs-keyword">while</span> ((len = inputStream.read(bf)) &gt; <span class="hljs-number">0</span>) &#123;<br>                outputStream.write(bf, <span class="hljs-number">0</span>, len);<br>            &#125;<br>        &#125; <span class="hljs-keyword">catch</span> (WriterException e) &#123;<br>            e.printStackTrace();<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            <span class="hljs-keyword">if</span> (outputStream != <span class="hljs-literal">null</span>) &#123;<br>                outputStream.flush();<br>                outputStream.close();<br>            &#125;<br>            <span class="hljs-keyword">if</span> (inputStream != <span class="hljs-literal">null</span>) &#123;<br>                inputStream.close();<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h1><blockquote>
+<p>一般项目中请求接口需要带token的，下载时如果是直接请求下载接口，需要暴露接口。在配置文件中暴露</p>
+</blockquote>
+<h1 id="下载多个二维码，打包-zip包"><a href="#下载多个二维码，打包-zip包" class="headerlink" title="下载多个二维码，打包.zip包"></a>下载多个二维码，打包.zip包</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 获取到宿舍dormId --下载二维码zip包</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> dormId 业务查询的楼栋id</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> request</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> response</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@throws</span> IOException</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@GetMapping(&quot;/download/&#123;dormId&#125;&quot;)</span><br><span class="hljs-meta">@ApiOperation(&quot;二维码下载&quot;)</span><br><span class="hljs-keyword">public</span> R <span class="hljs-title function_">downloadCode</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable</span> String dormId, HttpServletRequest request, HttpServletResponse response)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>    Dormitory dormitory=dormitoryService.getById(dormId);<br>    <span class="hljs-comment">//按宿舍楼id查询所有宿舍</span><br>    List&lt;Room&gt; roomIdList = roomService.getbyDormIdRoomAll(dormId);<br>    <span class="hljs-comment">//按宿舍楼id查询所有床位</span><br>    List&lt;Bunk&gt; bunkList = bunkService.getByDormIdBunkAll(dormId);<br><br>    <span class="hljs-type">String</span> <span class="hljs-variable">realPath</span> <span class="hljs-operator">=</span> request.getSession().getServletContext().getRealPath(<span class="hljs-string">&quot;/&quot;</span>);<br>    <span class="hljs-comment">//1 生成二维码</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">path</span> <span class="hljs-operator">=</span> realPath + dormitory.getTowerName();<br>    <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(path);<br>    <span class="hljs-keyword">if</span> (!file.exists()) &#123;<br>        file.mkdirs();<br>    &#125;<br>    <span class="hljs-comment">///////////////每条线程的数据数量</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">threadSize</span> <span class="hljs-operator">=</span> <span class="hljs-number">200</span>;<br>    <span class="hljs-comment">// 总数据条数</span><br>    <span class="hljs-type">int</span> dataSize2=bunkList.size();<br>    <span class="hljs-comment">// 线程数</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">threadNum</span> <span class="hljs-operator">=</span> dataSize2 / threadSize + <span class="hljs-number">1</span>;<br>    <span class="hljs-comment">// 定义标记,过滤threadNum为整数</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">special</span> <span class="hljs-operator">=</span> dataSize2 % threadSize == <span class="hljs-number">0</span>;<br><br>    <span class="hljs-comment">// 创建一个线程池</span><br>    <span class="hljs-type">ExecutorService</span> <span class="hljs-variable">exec</span> <span class="hljs-operator">=</span> Executors.newFixedThreadPool(threadNum);<br>    <span class="hljs-comment">// 定义一个任务集合</span><br>    List&lt;Callable&lt;Integer&gt;&gt; tasks = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;Callable&lt;Integer&gt;&gt;();<br>    Callable&lt;Integer&gt; task = <span class="hljs-literal">null</span>;<br>    List&lt;Bunk&gt; bunkCall = <span class="hljs-literal">null</span>;<br>    <span class="hljs-comment">///////////////////////</span><br>    <span class="hljs-comment">// 确定每条线程的数据</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; threadNum; i++) &#123;<br>        <span class="hljs-keyword">if</span> (i == threadNum - <span class="hljs-number">1</span>) &#123;<br>            <span class="hljs-keyword">if</span> (special) &#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>            bunkCall = bunkList.subList(threadSize * i, dataSize2);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            bunkCall = bunkList.subList(threadSize * i, threadSize * (i + <span class="hljs-number">1</span>));<br>        &#125;<br>        <span class="hljs-keyword">final</span> List&lt;Bunk&gt; bunkListStr = bunkCall;<br>        task = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Callable</span>&lt;Integer&gt;() &#123;<br>            <span class="hljs-type">Integer</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> Integer <span class="hljs-title function_">call</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>                    <span class="hljs-keyword">for</span> (Bunk bunk : bunkListStr) &#123;<br>                        QRCodeUtil.generateQRImage(<br>                                InspectionConstant.inspectionType.DORM_BED.toString() + <span class="hljs-string">&quot;|&quot;</span> + bunk.getId(),<br>                                path + <span class="hljs-string">&quot;/&quot;</span> + bunk.getRoomId() + <span class="hljs-string">&quot;号宿舍&quot;</span> + bunk.getNumber() + <span class="hljs-string">&quot;床位&quot;</span> + <span class="hljs-string">&quot;.jpg&quot;</span>,<br>                                <span class="hljs-literal">null</span>,bunk.getNumber()<br>                        );<span class="hljs-comment">//生成二维码的方法</span><br>                    &#125;<br>                    count++;<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;;<br>        <span class="hljs-comment">// 这里提交的任务容器列表和返回的Future列表存在顺序对应的关系</span><br>        tasks.add(task);<br>    &#125;<br>        <span class="hljs-comment">//生成二维码</span><br>        QRCodeUtil.generateQRImage(<br>                InspectionConstant.inspectionType.DORM_TOWER.toString() + <span class="hljs-string">&quot;|&quot;</span> + dormId,<br>                path + <span class="hljs-string">&quot;/宿舍楼&quot;</span> + dormitory.getTowerName() + <span class="hljs-string">&quot;.jpg&quot;</span>,<br>                <span class="hljs-literal">null</span>,dormitory.getTowerName());<br>        <span class="hljs-keyword">for</span> (Room x : roomIdList) &#123;<br>            <span class="hljs-comment">//生成二维码的方法</span><br>            QRCodeUtil.generateQRImage(<br>                    InspectionConstant.inspectionType.DORM_ROOM.toString() + <span class="hljs-string">&quot;|&quot;</span> + x.getId(),<br>                    path + <span class="hljs-string">&quot;/宿舍&quot;</span> + x.getNumber() + <span class="hljs-string">&quot;.jpg&quot;</span>,<br>                    <span class="hljs-literal">null</span>,x.getNumber()<br>            );<br>        &#125;<br>        <span class="hljs-comment">//开始执行线程任务</span><br>        List&lt;Future&lt;Integer&gt;&gt; results = exec.invokeAll(tasks);<br><br>    <span class="hljs-comment">// 关闭线程池</span><br>    exec.shutdown();<br>    <span class="hljs-comment">//2 生成zip文件</span><br>    ZipHelper.zipCompress(path, path + <span class="hljs-string">&quot;.zip&quot;</span>);<br>    <span class="hljs-comment">//3 下载</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">zipFileName</span> <span class="hljs-operator">=</span> path + <span class="hljs-string">&quot;.zip&quot;</span>;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">filename</span> <span class="hljs-operator">=</span>  dormitory.getTowerName()+ <span class="hljs-string">&quot;.zip&quot;</span>;<br>    <span class="hljs-comment">//设置文件MIME类型</span><br>    response.setContentType(<span class="hljs-string">&quot;application/octet-stream&quot;</span>);<br><br>    response.setCharacterEncoding(<span class="hljs-string">&quot;UTF-8&quot;</span>);<br>    <span class="hljs-comment">//设置Content-Disposition</span><br>    response.setHeader(<span class="hljs-string">&quot;Content-Disposition&quot;</span>, <span class="hljs-string">&quot;attachment;filename=&quot;</span> + URLEncoder.encode(filename, <span class="hljs-string">&quot;utf-8&quot;</span>));<br>    <span class="hljs-type">InputStream</span> <span class="hljs-variable">in</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileInputStream</span>(zipFileName);<br>    <span class="hljs-type">OutputStream</span> <span class="hljs-variable">out</span> <span class="hljs-operator">=</span> response.getOutputStream();<br><br>    <span class="hljs-comment">//写文件</span><br>    <span class="hljs-type">int</span> b;<br>    <span class="hljs-keyword">while</span> ((b = in.read()) != -<span class="hljs-number">1</span>) &#123;<br>        out.write(b);<br>    &#125;<br>    out.flush();<br>    <span class="hljs-comment">//4 删除多余文件</span><br>    ZipHelper.deleteDir(<span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(path));<br>    in.close();<span class="hljs-comment">//先关闭输入流才能删除</span><br>    ZipHelper.deleteDir(<span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(zipFileName));<br>    out.close();<br><br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>        R.failed(<span class="hljs-string">&quot;下载二维码错误&quot;</span>+e);<br>        e.printStackTrace();<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%BA%8C%E7%BB%B4%E7%A0%81/">#二维码</a>
+      
+        <a href="/tags/ZXing/">#ZXing</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>zxing下载二维码</div>
+      <div>http://nullaman.com/2019/12/05/zxing下载二维码/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>aman</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年12月5日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/12/05/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E4%BA%94)/" title="代理模式-Java设计模式(五)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">代理模式-Java设计模式(五)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/12/04/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F-Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(%E5%9B%9B)/" title="装饰器模式-Java设计模式(四)">
+                        <span class="hidden-mobile">装饰器模式-Java设计模式(四)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/nullaman" target="_blank" rel="nofollow noopener"><span>阿瞒</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/nullaman" target="_blank" rel="nofollow noopener"><span>aman</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
