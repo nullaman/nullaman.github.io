@@ -16,26 +16,33 @@
   <meta name="author" content="aman">
   <meta name="keywords" content="aman">
   
-    <meta name="description" content="Spring专题-知识点，面试回答思路整理。">
+    <meta name="description" content="锁、悲观锁(对象锁)机制">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring专题-知识点">
-<meta property="og:url" content="http://nullaman.com/2022/06/15/Spring%E4%B8%93%E9%A2%98-%E7%9F%A5%E8%AF%86%E7%82%B9/index.html">
+<meta property="og:title" content="Java并发-锁(一)">
+<meta property="og:url" content="http://nullaman.com/2022/06/16/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/index.html">
 <meta property="og:site_name" content="aman">
-<meta property="og:description" content="Spring专题-知识点，面试回答思路整理。">
+<meta property="og:description" content="锁、悲观锁(对象锁)机制">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://nullaman.com/images/Spring%E4%B8%93%E9%A2%98-%E7%9F%A5%E8%AF%86%E7%82%B9/spring%E6%BA%90%E7%A0%81.jpg">
-<meta property="article:published_time" content="2022-06-15T02:05:27.000Z">
-<meta property="article:modified_time" content="2022-06-15T02:46:10.592Z">
+<meta property="og:image" content="http://nullaman.com/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/%E4%B9%90%E8%A7%82%E9%94%81%E6%82%B2%E8%A7%82%E9%94%81.png">
+<meta property="og:image" content="http://nullaman.com/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/jvm%E8%BF%90%E8%A1%8C%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="http://nullaman.com/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/MarkWord.png">
+<meta property="og:image" content="http://nullaman.com/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/synchronized%E7%BC%96%E8%AF%91%E5%90%8E.jpg">
+<meta property="og:image" content="http://nullaman.com/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/monitor.png">
+<meta property="og:image" content="http://nullaman.com/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/monitor.png">
+<meta property="og:image" content="http://nullaman.com/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/%E5%AF%B9%E8%B1%A1%E9%94%81%E7%9A%84%E7%8A%B6%E6%80%81%E5%8F%98%E5%8C%96.png">
+<meta property="article:published_time" content="2022-06-16T03:21:59.000Z">
+<meta property="article:modified_time" content="2022-06-16T07:40:42.978Z">
 <meta property="article:author" content="aman">
-<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="锁">
+<meta property="article:tag" content="Java并发">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://nullaman.com/images/Spring%E4%B8%93%E9%A2%98-%E7%9F%A5%E8%AF%86%E7%82%B9/spring%E6%BA%90%E7%A0%81.jpg">
+<meta name="twitter:image" content="http://nullaman.com/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/%E4%B9%90%E8%A7%82%E9%94%81%E6%82%B2%E8%A7%82%E9%94%81.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Spring专题-知识点 - aman</title>
+  <title>Java并发-锁(一) - aman</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +205,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Spring专题-知识点"></span>
+            <span id="subtitle" data-typed-text="Java并发-锁(一)"></span>
           
         </div>
 
@@ -214,8 +221,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-15 10:05" pubdate>
-          2022年6月15日 上午
+        <time datetime="2022-06-16 11:21" pubdate>
+          2022年6月16日 上午
         </time>
       </span>
     
@@ -226,7 +233,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.1k 字
+          3.8k 字
         
       </span>
     
@@ -237,7 +244,7 @@
         
         
         
-          43 分钟
+          32 分钟
         
       </span>
     
@@ -283,146 +290,112 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Spring专题-知识点</h1>
+            <h1 style="display: none">Java并发-锁(一)</h1>
             
             <div class="markdown-body">
               
-              <p>Spring专题-知识点，面试回答思路整理。</p>
+              <p>锁、悲观锁(对象锁)机制</p>
 <span id="more"></span>
 
-<h1 id="1、谈谈Spring-IOC的理解，原理与实现"><a href="#1、谈谈Spring-IOC的理解，原理与实现" class="headerlink" title="1、谈谈Spring IOC的理解，原理与实现?"></a>1、谈谈Spring IOC的理解，原理与实现?</h1><h2 id="总"><a href="#总" class="headerlink" title="总:"></a>总:</h2><ul>
-<li><p>控制反转：理论思想，原来的对象是由使用者来进行控制，有了spring之后，可以把整个对象交给spring来帮我们进行管理</p>
-</li>
-<li><p>DI：依赖注入，把对应的属性的值注入到具体的对象中，@Autowired，populateBean完成属性值的注入</p>
-</li>
-<li><p>容器：存储对象，使用map结构来存储，在spring中一般存在三级缓存，singletonObjects存放完整的bean对象,整个bean的生命周期，从创建到使用到销毁的过程全部都是由容器来管理（bean的生命周期）</p>
-</li>
-</ul>
-<h2 id="分"><a href="#分" class="headerlink" title="分:"></a>分:</h2><p><code>1、</code>一般聊ioc容器的时候要涉及到容器的创建过程（beanFactory,DefaultListableBeanFactory）,向bean工厂中设置一些参数（BeanPostProcessor,Aware接口的子类）等等属性</p>
-<p><code>2</code>、加载解析bean对象，准备要创建的bean对象的定义对象beanDefinition,(xml或者注解的解析过程)</p>
-<p><code>3</code>、beanFactoryPostProcessor的处理，此处是扩展点，PlaceHolderConfigurSupport,ConfigurationClassPostProcessor</p>
-<p><code>4</code>、BeanPostProcessor的注册功能，方便后续对bean对象完成具体的扩展功能</p>
-<p><code>5</code>、通过反射的方式讲BeanDefinition对象实例化成具体的bean对象，</p>
-<p><code>6</code>、bean对象的初始化过程（填充属性，调用aware子类的方法，调用BeanPostProcessor前置处理方法，调用init-mehtod方法，调用BeanPostProcessor的后置处理方法）</p>
-<p><code>7</code>、生成完整的bean对象，通过getBean方法可以直接获取</p>
-<p><code>8</code>、销毁过程</p>
-<h1 id="2、谈一下spring-IOC的底层实现"><a href="#2、谈一下spring-IOC的底层实现" class="headerlink" title="2、谈一下spring IOC的底层实现"></a>2、谈一下spring IOC的底层实现</h1><ul>
-<li><p>X底层实现：工作原理，过程，数据结构，流程，设计模式，设计思想</p>
-</li>
-<li><p>√ 你对他的理解和你了解过的实现过程</p>
-</li>
-<li><p>反射，工厂，设计模式（会的说，不会的不说），关键的几个方法【createBeanFactory，getBean,doGetBean,createBean,doCreateBean,createBeanInstance(getDeclaredConstructor,newinstance),populateBean,initializingBean】</p>
-</li>
-</ul>
-<p><code>1</code>、先通过createBeanFactory创建出一个Bean工厂（DefaultListableBeanFactory）</p>
-<p><code>2</code>、开始循环创建对象，因为容器中的bean默认都是单例的，所以优先通过getBean,doGetBean从容器中查找，找不到的话，</p>
-<p><code>3</code>、通过createBean,doCreateBean方法，以反射的方式创建对象，一般情况下使用的是无参的构造方法（getDeclaredConstructor，newInstance）</p>
-<p><code>4</code>、进行对象的属性填充populateBean</p>
-<p><code>5</code>、进行其他的初始化操作（initializingBean）</p>
-<h1 id="3、描述一下bean的生命周期？"><a href="#3、描述一下bean的生命周期？" class="headerlink" title="3、描述一下bean的生命周期？"></a>3、描述一下bean的生命周期？</h1><p>【背图-见最后】记住图中的流程</p>
-<p>在表述的时候不要只说图中有的关键点，要学会扩展描述：</p>
-<p><code>1</code>、实例化bean：反射的方式生成对象</p>
-<p><code>2</code>、填充bean的属性：populateBean(),循环依赖的问题（三级缓存）</p>
-<p><code>3</code>、调用aware接口相关的方法：invokeAwareMethod(完成BeanName,BeanFactory,BeanClassLoader对象的属性设置)</p>
-<p><code>4</code>、调用BeanPostProcessor中的前置处理方法：使用比较多的有（ApplicationContextPostProcessor,设置ApplicationContext,Environment,ResourceLoader,EmbeddValueResolver等对象）</p>
-<p><code>5</code>、调用initmethod方法：invokeInitmethod(),判断是否实现了initializingBean接口，如果有，调用afterPropertiesSet方法，没有就不调用</p>
-<p><code>6</code>、调用BeanPostProcessor的后置处理方法：spring的aop就是在此处实现的，AbstractAutoProxyCreator注册Destuction相关的回调接口：钩子函数</p>
-<p><code>7</code>、获取到完整的对象，可以通过getBean的方式来进行对象的获取</p>
-<p><code>8</code>、销毁流程，1.判断是否实现了DispoableBean接口，2.调用destroyMethod方法</p>
-<h1 id="4、Spring-是如何解决循环依赖的问题的？"><a href="#4、Spring-是如何解决循环依赖的问题的？" class="headerlink" title="4、Spring 是如何解决循环依赖的问题的？"></a>4、Spring 是如何解决循环依赖的问题的？</h1><blockquote>
-<p>三级缓存，提前暴露对象，aop</p>
+<h1 id="什么是锁？"><a href="#什么是锁？" class="headerlink" title="什么是锁？"></a>什么是锁？</h1><p>在并发环境下，会出现多个线程对一个资源进行争抢的情况。为了解决争抢时引发的问题，就出现了锁。</p>
+<p>锁是用来控制多个线程访问共享资源的方式，一般来说，一个锁能够防止多个线程同时访问共享资源。</p>
+<blockquote>
+<p>可以认为本质上就是在临界资源上对线程的一种串行化。</p>
 </blockquote>
+<h2 id="乐观锁、悲观锁"><a href="#乐观锁、悲观锁" class="headerlink" title="乐观锁、悲观锁"></a>乐观锁、悲观锁</h2><p><img src="/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/%E4%B9%90%E8%A7%82%E9%94%81%E6%82%B2%E8%A7%82%E9%94%81.png" srcset="/img/loading.gif" lazyload alt="乐观锁悲观锁"></p>
+<h1 id="Java锁机制"><a href="#Java锁机制" class="headerlink" title="Java锁机制"></a>Java锁机制</h1><h2 id="Jvm运行结构"><a href="#Jvm运行结构" class="headerlink" title="Jvm运行结构"></a>Jvm运行结构</h2><p>Jvm运行内存结构主要五个部分：程序计数器(PC寄存器)、JVM栈、Native方法栈、堆、方法区。</p>
+<p><img src="/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/jvm%E8%BF%90%E8%A1%8C%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.png" srcset="/img/loading.gif" lazyload alt="jvm运行内存结构"></p>
 <ul>
-<li><p>总：什么是循环依赖问题，A依赖B,B依赖A</p>
-</li>
-<li><p>分：先说明bean的创建过程：实例化，初始化（填充属性）</p>
-<p>  <code>1</code>、先创建A对象，实例化A对象，此时A对象中的b属性为空，填充属性b</p>
-<p>  <code>2</code>、从容器中查找B对象，如果找到了，直接赋值不存在循环依赖问题（不通），找不到直接创建B对象</p>
-<p>  <code>3</code>、实例化B对象，此时B对象中的a属性为空，填充属性a</p>
-<p>  <code>4</code>、从容器中查找A对象，找不到，直接创建</p>
-</li>
-<li><p>形成闭环的原因</p>
-</li>
+<li>对蓝色区域进行争抢的时候，就会引发难以预料的情况。</li>
 </ul>
-<p>此时，如果仔细琢磨的话，会发现A对象是存在的，只不过此时的A对象不是一个完整的状态，只完成了实例化但是未完成初始化，如果在程序调用过程中，拥有了某个对象的引用，能否在后期给他完成赋值操作，可以优先把非完整状态的对象优先赋值，等待后续操作来完成赋值，相当于提前暴露了某个不完整对象的引用，所以解决问题的核心在于实例化和初始化分开操作，这也是解决循环依赖问题的关键，</p>
-<p>当所有的对象都完成实例化和初始化操作之后，还要把完整对象放到容器中，此时在容器中存在对象的几个状态，完成实例化&#x3D;但未完成初始化，完整状态，因为都在容器中，所以要使用不同的map结构来进行存储，此时就有了一级缓存和二级缓存，如果一级缓存中有了，那么二级缓存中就不会存在同名的对象，因为他们的查找顺序是1，2，3这样的方式来查找的。一级缓存中放的是完整对象，二级缓存中放的是非完整对象</p>
-<p>为什么需要三级缓存？三级缓存的value类型是ObjectFactory,是一个函数式接口，存在的意义是保证在整个容器的运行过程中同名的bean对象只能有一个。</p>
-<p>如果一个对象需要被代理，或者说需要生成代理对象，那么要不要优先生成一个普通对象？要</p>
-<p>普通对象和代理对象是不能同时出现在容器中的，因此当一个对象需要被代理的时候，就要使用代理对象覆盖掉之前的普通对象，在实际的调用过程中，是没有办法确定什么时候对象被使用，所以就要求当某个对象被调用的时候，优先判断此对象是否需要被代理，类似于一种回调机制的实现，因此传入lambda表达式的时候，可以通过lambda表达式来执行对象的覆盖过程，getEarlyBeanReference()</p>
-<p>因此，所有的bean对象在创建的时候都要优先放到三级缓存中，在后续的使用过程中，如果需要被代理则返回代理对象，如果不需要被代理，则直接返回普通对象</p>
-<h1 id="4-1、缓存的放置时间和删除时间"><a href="#4-1、缓存的放置时间和删除时间" class="headerlink" title="4.1、缓存的放置时间和删除时间"></a>4.1、缓存的放置时间和删除时间</h1><ul>
-<li><p>三级缓存：createBeanInstance之后：addSingletonFactory</p>
-</li>
-<li><p>二级缓存：第一次从三级缓存确定对象是代理对象还是普通对象的时候，同时删除三级缓存 getSingleton</p>
-</li>
-<li><p>一级缓存：生成完整对象之后放到一级缓存，删除二三级缓存:addSingleton</p>
-</li>
-</ul>
-<h1 id="5、Bean-Factory与FactoryBean有什么区别？"><a href="#5、Bean-Factory与FactoryBean有什么区别？" class="headerlink" title="5、Bean Factory与FactoryBean有什么区别？"></a>5、Bean Factory与FactoryBean有什么区别？</h1><ul>
-<li><p>相同点：都是用来创建bean对象的</p>
-</li>
-<li><p>不同点：使用BeanFactory创建对象的时候，必须要遵循严格的生命周期流程，太复杂了，，如果想要简单的自定义某个对象的创建，同时创建完成的对象想交给spring来管理，那么就需要实现FactroyBean接口了</p>
-<p>  isSingleton:是否是单例对象</p>
-<p>  getObjectType:获取返回对象的类型</p>
-<p>  getObject:自定义创建对象的过程(new，反射，动态代理)</p>
-</li>
-</ul>
-<h1 id="6、Spring中用到的设计模式"><a href="#6、Spring中用到的设计模式" class="headerlink" title="6、Spring中用到的设计模式?"></a>6、Spring中用到的设计模式?</h1><p>单例模式：bean默认都是单例的</p>
-<p>原型模式：指定作用域为prototype</p>
-<p>工厂模式：BeanFactory</p>
-<p>模板方法：postProcessBeanFactory,onRefresh,initPropertyValue</p>
-<p>策略模式：XmlBeanDefinitionReader,PropertiesBeanDefinitionReader</p>
-<p>观察者模式：listener，event，multicast</p>
-<p>适配器模式：Adapter</p>
-<p>装饰者模式：BeanWrapper</p>
-<p>责任链模式：使用aop的时候会先生成一个拦截器链</p>
-<p>代理模式：动态代理</p>
-<p>委托者模式：delegate</p>
-<p>。。。。。。。。。等。。。</p>
-<h1 id="7、Spring的AOP的底层实现原理"><a href="#7、Spring的AOP的底层实现原理" class="headerlink" title="7、Spring的AOP的底层实现原理?"></a>7、Spring的AOP的底层实现原理?</h1><blockquote>
-<p>动态代理。aop是ioc的一个扩展功能，先有的ioc，再有的aop，只是在ioc的整个流程中新增的一个扩展点而已：BeanPostProcessor</p>
+<blockquote>
+<p>在Java中，锁主要采用了两种实现方式：<br><code>1</code>、基于Object的悲观锁（本文主要讲解学习的）<br><code>2</code>、基于CAS的乐观锁。</p>
 </blockquote>
+<h2 id="对象、对象头"><a href="#对象、对象头" class="headerlink" title="对象、对象头"></a>对象、对象头</h2><p>在Java中，每个Object，都拥有一把锁，锁存放在对象头中，记录当前对象被那个线程占用。</p>
 <ul>
-<li><p>总：aop概念，应用场景，动态代理</p>
-</li>
-<li><p>分：bean的创建过程中有一个步骤可以对bean进行扩展实现，aop本身就是一个扩展功能，所以在BeanPostProcessor的后置处理方法中来进行实现</p>
-<p>  <code>1</code>、代理对象的创建过程（advice，切面，切点）</p>
-<p>  <code>2</code>、通过jdk或者cglib的方式来生成代理对象</p>
-<p>  <code>3</code>、在执行方法调用的时候，会调用到生成的字节码文件中，直接回找到DynamicAdvisoredInterceptor类中的intercept方法，从此方法开始执行</p>
-<p>  <code>4</code>、根据之前定义好的通知来生成拦截器链</p>
-<p>  <code>5</code>、从拦截器链中依次获取每一个通知开始进行执行，在执行过程中，为了方便找到下一个通知是哪个，会有一个CglibMethodInvocation的对象，找的时候是从-1的位置一次开始查找并且执行的。</p>
+<li>Java对象分为三个部分：<ul>
+<li>对象头</li>
+<li>实例数据</li>
+<li>对齐填充字节</li>
+</ul>
 </li>
 </ul>
-<h1 id="8、Spring的事务是如何回滚的-事务管理是如何实现的？"><a href="#8、Spring的事务是如何回滚的-事务管理是如何实现的？" class="headerlink" title="8、Spring的事务是如何回滚的?事务管理是如何实现的？"></a>8、Spring的事务是如何回滚的?事务管理是如何实现的？</h1><ul>
-<li><p>总：spring的事务是由aop来实现的，首先要生成具体的代理对象，然后按照aop的整套流程来执行具体的操作逻辑，正常情况下要通过通知来完成核心功能，但是事务不是通过通知来实现的，而是通过一个TransactionInterceptor来实现的，然后调用invoke来实现具体的逻辑</p>
-</li>
-<li><p>分：</p>
-<p>  <code>1</code>、先做准备工作，解析各个方法上事务相关的属性，根据具体的属性来判断是否开始新事务</p>
-<p>  <code>2</code>、当需要开启的时候，获取数据库连接，关闭自动提交功能，开起事务</p>
-<p>  <code>3</code>、执行具体的sql逻辑操作</p>
-<p>  <code>4</code>、在操作过程中，如果执行失败了，那么会通过completeTransactionAfterThrowing看来完成事务的回滚操作，回滚的具体逻辑是通过doRollBack方法来实现的，实现的时候也是要先获取连接对象，通过连接对象来回滚</p>
-<p>  <code>5</code>、如果执行过程中，没有任何意外情况的发生，那么通过commitTransactionAfterReturning来完成事务的提交操作，提交的具体逻辑是通过doCommit方法来实现的，实现的时候也是要获取连接，通过连接对象来提交</p>
-<p>  <code>6</code>、当事务执行完毕之后需要清除相关的事务信息cleanupTransactionInfo</p>
-</li>
-</ul>
-<p>如果想要聊的更加细致的话，需要知道TransactionInfo,TransactionStatus,</p>
-<h1 id="9、谈一下spring事务传播？"><a href="#9、谈一下spring事务传播？" class="headerlink" title="9、谈一下spring事务传播？"></a>9、谈一下spring事务传播？</h1><ul>
-<li>传播特性有几种？7种<blockquote>
-<p>【Required】【Requires_new】【nested】【Support】【Not_Support】【Never】【Mandatory】</p>
+<blockquote>
+<p>实例数据就是你在初始化对象时设定的属性和状态内容。<br>对齐填充字节是为了满足 “Java对象大小是8字节的倍数” 这一条件而设计的，为对象填充一些无用字节，大可不必理会。</p>
 </blockquote>
-</li>
-</ul>
-<p><code>Q1</code>、 某一个事务嵌套另一个事务的时候怎么办？<br><code>Q2</code>、 A方法调用B方法，AB方法都有事务，并且传播特性不同，那么A如果有异常，B怎么办，B如果有异常，A怎么办？</p>
+<hr>
 <ul>
-<li><p>总：事务的传播特性指的是不同方法的嵌套调用过程中，事务应该如何进行处理，是用同一个事务还是不同的事务，当出现异常的时候会回滚还是提交，两个方法之间的相关影响，在日常工作中，使用比较多的是required，Requires_new,nested</p>
-</li>
-<li><p>分：<br>  <code>1</code>、先说事务的不同分类，可以分为三类：支持当前事务，不支持当前事务，嵌套事务</p>
-<p>  <code>2</code>、如果外层方法是required，内层方法是，required,requires_new,nested</p>
-<p>  <code>3</code>、如果外层方法是requires_new，内层方法是，required,requires_new,nested</p>
-<p>  <code>4</code>、如果外层方法是nested，内层方法是，required,requires_new,nested</p>
+<li>对象头是重点，对象头包含了两部分:<ul>
+<li>Mark Word</li>
+<li>Class Pointer</li>
+</ul>
 </li>
 </ul>
-<h1 id="10、【总览图】"><a href="#10、【总览图】" class="headerlink" title="10、【总览图】"></a>10、【总览图】</h1><p><img src="/images/Spring%E4%B8%93%E9%A2%98-%E7%9F%A5%E8%AF%86%E7%82%B9/spring%E6%BA%90%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="总览图.jpg"></p>
+<blockquote>
+<p>相比较于实例数据，对象头属于一些额储存开销，所以被设计的极小来提升效率（一般为232bit或264bit）<br>ClassPointer是一个指针，指向当前对象类型所在方法区中的Class信息。<br>Mark Word存储了很多当前对象运行时的状态信息，比如HashCode、锁状态标志、指向锁记录的指针、偏向线程Id、锁标志位等等。</p>
+</blockquote>
+<p>MarkWord图<br><img src="/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/MarkWord.png" srcset="/img/loading.gif" lazyload alt="MarkWord"></p>
+<blockquote>
+<p>Mark Word只有32bit（或64bit）并且它是非结构化的。<br>这样，在不同的锁标识位下，不同字段可以重用不同的比特位，节省空间。</p>
+</blockquote>
+<p>上图中，这把抽象的 <strong><code>“锁”</code></strong> 的信息就储存在对象头的MarkWord中。<br>重点关注最后两位，这两位代表锁标志位，分别对应 <strong>“<code>无锁</code>”</strong> , <strong>“<code>偏向锁</code>”</strong> , <strong>“<code>轻量级锁</code>”</strong> , <strong>“<code>重量级锁</code>”</strong> 这四种状态。<br>锁状态是只能升级，不能降级。 <strong>无锁-&gt;偏向锁-&gt;轻量级锁-&gt;重量级锁</strong></p>
+<h2 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h2><p>在Java中，启用对象锁的方式是使用 <strong>“<code>synchronized</code>”</strong> 关键字。</p>
+<blockquote>
+<p>synchronized被编译后会生成<code>monitorenter</code>和<code>monitorexit</code>两个字节码指令，依赖这两个指令来进行线程同步。</p>
+</blockquote>
+<p><img src="/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/synchronized%E7%BC%96%E8%AF%91%E5%90%8E.jpg" srcset="/img/loading.gif" lazyload alt="synchronized编译后"></p>
+<hr>
+<p>monitor(管程&#x2F;监视器)<br><img src="/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/monitor.png" srcset="/img/loading.gif" lazyload alt="monitor"></p>
+<p>上图模拟流程：<br>1.<code>Entry Set</code>中聚集了一些想要进入<code>Monitor</code>的线程，处于<code>waiting</code>状态。<br>2.假设某个名为<code>A线程</code>成功进入<code>Monitor</code>，那么它就处于<code>active</code>状态。<br>3.此时线程执行途中，遇到一个判断条件，需要它暂时让出执行权，那么它将进入<code>Wait Set</code>，状态也被标记为<code>waiting</code>。<br>4.这时<code>Entry Set</code>中的其他线程就有机会进入<code>Monitor</code>，假设一个<code>线程B</code>成功进入并且顺利完成，<br>那么它可以通过<code>notify</code>的行是来唤醒<code>Wait Set</code>中的<code>线程A</code>，让<code>线程A</code>再次进入<code>Monitor</code>，执行完成后便退出。</p>
+<p>这就是synchronized关键字所实现的同步机制，需要注意的：</p>
+<blockquote>
+<p>synchronized有性能问题，因为 <code>synchronized</code> 依赖 <code>monitor</code> 依赖 <code>Mutex Lock</code>(操作系统提供的)<br>所以每当挂起或者唤醒一个线程都要切换到操作系统的内核态，这个操作是比较重量级的。<br>在某些情况下，甚至切换时间本身就会超出线程执行任务的时间。</p>
+</blockquote>
+<p>但是从Java6开始，synchronized进行了优化，引入了 “<code>偏向锁</code>” , “<code>轻量级锁</code>” 的概念。<br>因此对象锁总共有四种状态，从低到高分别是 <strong>“<code>无锁</code>”</strong> , <strong>“<code>偏向锁</code>”</strong> , <strong>“<code>轻量级锁</code>”</strong> , <strong>“<code>重量级锁</code>”</strong> ，这就分别对应Mark Word中锁标记位的四种状态<br>锁状态是只能升级，不能降级。 <strong>无锁-&gt;偏向锁-&gt;轻量级锁-&gt;重量级锁</strong></p>
+<h2 id="对象锁的四种状态"><a href="#对象锁的四种状态" class="headerlink" title="对象锁的四种状态"></a>对象锁的四种状态</h2><h3 id="无锁"><a href="#无锁" class="headerlink" title="无锁"></a>无锁</h3><p>无锁顾名思义就是没有对资源进行操作系统级别（Mute Lock）的锁定。</p>
+<p>在这个基础上，“<strong>无锁</strong>” 其实有两种语义。</p>
+<ul>
+<li>某种资源不会出现在多线程环境下，或者即使出现在多线程环境下也不会出现线程竞争的情况，<br>那么确实无需堆这个资源进行任何的同步保护，直接给各个线程随意调用就可以。</li>
+<li>资源会被竞争，但是不使用操作系统同步原语对共享资源进行锁定，而是通过一些其他的机制来控制同步。<br>比如CAS(CompareAndSwap)，通过函数级别的锁，进行 “无锁” 编程。<br>大部分情况下，无锁效率更高，但是并非意味着无锁能够全面替代有锁。</li>
+</ul>
+<h3 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h3><ul>
+<li><p>概念<br>假设一个对象被加锁了，但在实际运行时，只有一条线程会获取这个对象锁，<br>那么最理想的方式，是不通过系统状态切换，也不通过CAS，只在用户态把这件事做掉。<br>设想的是，最好对象锁能认识这个线程，只要这个线程过来，那么对象直接把锁交出去。<br>我们可以认为这个对象锁偏爱这个线程，所以被称为 “偏向锁”</p>
+</li>
+<li><p>是如何实现的？<br>在Mark Word中，当锁的标志位是01，(详细可见上图MarkWord)<br>那么判断倒数第三个bit是否为1，如果是1，代表当前对象的锁状态为偏向锁，<br>于是再去读Mark Word的前23个bit，这23个bit就是线程ID，<br>通过线程ID来确定想要获得的对象锁的线程是不是“被偏爱的线程”</p>
+</li>
+</ul>
+<p>假设情况发送了变化，对象发现不只有一个线程，而是多个线程正在竞争锁，那么偏向锁会升级为<strong>“<code>轻量级锁</code>”</strong></p>
+<h3 id="轻量级锁"><a href="#轻量级锁" class="headerlink" title="轻量级锁"></a>轻量级锁</h3><blockquote>
+<p>(在MarkWord中的占位详细可见上图MarkWord，以及jvm虚拟机见上上图jvm运行内存结构)</p>
+</blockquote>
+<p>不再是用MarkWord中的线程ID来找到线程和锁之间的绑定关系。</p>
+<p>当一个线程想要获得某个对象的锁时，通过锁标志位00来知道是轻量级锁，<br>这时，线程会在自己的虚拟机中开辟一块 <strong>“ Lock Record ”</strong> 的空间。关于虚拟机栈，是线程私有的</p>
+<p><strong>Lock Record 存放的是对象头的Mark Word的副本以及Owner指针。</strong><br>线程通过CAS去尝试获取锁，一旦获得，那么将会复制该对象的Mark Word到虚拟机栈的Lock Record中，并且将Lock Record中的Owner指针指向该对象锁。<br>另一方面，对象的Mark Word中的前30bit将生成一个指针，指向持有该对象锁的线程虚拟机栈中的Lock Record。<br>这样就实现了线程和对象锁的绑定，互相知道对方的存在。</p>
+<p>这时，这个对象被锁定了，获取了这个对象锁的线程就可以去执行一些任务。<br>如果其他线程想要获取这个对象怎么办？-此时其他线程将会<strong>自旋等待</strong>（见下方小tips）。</p>
+<p>假如对象锁被一个线程持有着，此时也有一个线程正在自旋等待，<br>如果同时又有多个线程想要获取这个对象锁。<br>也就是说，一旦自旋等待的线程数超过1个，那么轻量级锁将会升级成为<strong>“<code>重量级锁</code>”</strong></p>
+<blockquote>
+<p>知识盲区？（也有说 自旋个数超过CPU核数的一半  或者自旋次数超过10次才会升级成重量级锁）</p>
+</blockquote>
+<blockquote>
+<p>tips：<br>自旋：可以理解为一种轮询，自己不断循环尝试去看锁有没有释放，<br>如果释放了，就获取，没有释放就进行下一轮轮询，这种方式区别于被操作系统阻塞，如果对象锁很快被释放，自旋去获得锁完全在用户空间解决，不需要系统中断和线程恢复，所以效率更高。<br>自旋相当于CPU在空转，如果长时间自旋，将会浪费CPU自源，于是出现一种叫做<strong>“自适应自旋”</strong>的优化，<br>简单来说就是自旋时间不再固定，是由上一次在同一个锁上的自旋时间以及锁的状态来决定。<br>比如：当前正在自旋等待的线程刚刚成功获得过锁，但是锁目前被其他线程持有，那么虚拟机会任务下次自旋很有可能会再次成功，进而允许更长的自旋时间。</p>
+</blockquote>
+<h3 id="重量级锁"><a href="#重量级锁" class="headerlink" title="重量级锁"></a>重量级锁</h3><p>如果被标记为重量级锁，那么就会和最初的synchronized那样，通过Monitor来对线程进行控制，此时将会使用同步原语来锁定资源，对线程的控制也最为严格</p>
+<p><img src="/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/monitor.png" srcset="/img/loading.gif" lazyload alt="重量级锁"></p>
+<h3 id="对象锁的状态变化"><a href="#对象锁的状态变化" class="headerlink" title="对象锁的状态变化"></a>对象锁的状态变化</h3><p><img src="/images/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/%E5%AF%B9%E8%B1%A1%E9%94%81%E7%9A%84%E7%8A%B6%E6%80%81%E5%8F%98%E5%8C%96.png" srcset="/img/loading.gif" lazyload alt="对象锁的状态变化"></p>
+<h1 id="思考？理解"><a href="#思考？理解" class="headerlink" title="思考？理解"></a>思考？理解</h1><h3 id="为什么有轻量级锁。直接使用monitor不行吗？"><a href="#为什么有轻量级锁。直接使用monitor不行吗？" class="headerlink" title="为什么有轻量级锁。直接使用monitor不行吗？"></a>为什么有轻量级锁。直接使用monitor不行吗？</h3><blockquote>
+<p>可以的，但如果有多个线程使用同一个资源，但是他们没有竞争。<br><code>线程1</code>在13:00点使用，<code>线程2</code>在14:00点使用，没有竞争。如果还用monitor是不是有点杀鸡用牛刀了。<br>为了提升性能，提出了轻量级锁。不再用对象关联monitor了，而是对象的mark word字段和线程栈的 lock record进行交换作为锁。<br>如果有锁重入，就会创建多个lock record放入线程栈，<br>那么问题有来了，<code>如果重入多了，多次创建lock record不是也消耗性能吗？</code><br>所以提出了偏向锁。对线头设置线程id，解决重入问题。</p>
+</blockquote>
+<h3 id="理清下这些锁在什么场景下使用？"><a href="#理清下这些锁在什么场景下使用？" class="headerlink" title="理清下这些锁在什么场景下使用？"></a>理清下这些锁在什么场景下使用？</h3><ul>
+<li>偏向锁：只有一个线程，没有其他线程</li>
+<li>轻量级锁：多个线程但是没有竞争<br>这点尤为重要，轻量级锁是解决不了锁竞争的。轻量级锁解决的问题是在多线程没有竞争下，仍旧关联monitor的问题。</li>
+<li>重量级锁：多个线程有竞争</li>
+</ul>
+<h3 id="锁升级的过程："><a href="#锁升级的过程：" class="headerlink" title="锁升级的过程："></a>锁升级的过程：</h3><blockquote>
+<p>对象默认是开启<code>偏向锁</code>的，当一个线程使用时，对象mark word会设置该线程的id，<br>如果还有另外一个线程 会升级为<code>轻量级锁</code>，<br>如果<code>轻量级锁</code>升级<code>失败</code>，说明有线程正在使用资源，发生了资源竞争，会升级为<code>重量级锁</code>。<br>如果<code>轻量级锁</code>升级<code>成功</code>了，在释放锁的使用，对象会变成<code>无锁状态</code>，不再是<code>偏向</code>的，下次加锁是会直接在<code>轻量级锁</code>。</p>
+</blockquote>
+<h3 id="还有一点可能有异议？"><a href="#还有一点可能有异议？" class="headerlink" title="还有一点可能有异议？"></a>还有一点可能有异议？</h3><blockquote>
+<p>自旋的过程是发生在有锁竞争的情况下，所以该锁已经是<code>重量级锁</code>了。<br>自旋是已经升级为<code>重量级锁</code>入队之前进行的自旋，自旋失败会入队排队，但此时已经是<code>重量级锁</code>了，<br>从<code>偏项锁</code>升级为<code>轻量级锁</code>的时候就一次cas，成功就成功，不成功就升级为<code>重量级锁</code>。</p>
+</blockquote>
 
               
             </div>
@@ -455,7 +428,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Spring/">#Spring</a>
+        <a href="/tags/%E9%94%81/">#锁</a>
+      
+        <a href="/tags/Java%E5%B9%B6%E5%8F%91/">#Java并发</a>
       
     </div>
   
@@ -467,8 +442,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Spring专题-知识点</div>
-      <div>http://nullaman.com/2022/06/15/Spring专题-知识点/</div>
+      <div>Java并发-锁(一)</div>
+      <div>http://nullaman.com/2022/06/16/Java并发-锁(一)/</div>
     </div>
     <div class="license-meta">
       
@@ -480,7 +455,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月15日</div>
+          <div>2022年6月16日</div>
         </div>
       
       
@@ -510,18 +485,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/06/16/Java%E5%B9%B6%E5%8F%91-%E9%94%81(%E4%B8%80)/" title="Java并发-锁(一)">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Java并发-锁(一)</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/06/13/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE(%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)/" title="微信公众号开发配置(个人订阅号)">
-                        <span class="hidden-mobile">微信公众号开发配置(个人订阅号)</span>
+                      <a href="/2022/06/15/Spring%E4%B8%93%E9%A2%98-%E7%9F%A5%E8%AF%86%E7%82%B9/" title="Spring专题-知识点">
+                        <span class="hidden-mobile">Spring专题-知识点</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
