@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://nullaman.com/images/Kafka(%E4%B8%80)-%E5%9F%BA%E7%A1%80/%E9%9B%86%E7%BE%A4%E5%9B%BE%E8%A7%A3.png">
 <meta property="og:image" content="http://nullaman.com/images/Kafka(%E4%B8%80)-%E5%9F%BA%E7%A1%80/%E9%9B%86%E7%BE%A4%E5%9B%BE%E8%A7%A3.png">
 <meta property="article:published_time" content="2022-06-22T08:15:34.000Z">
-<meta property="article:modified_time" content="2022-06-23T02:18:42.812Z">
+<meta property="article:modified_time" content="2022-06-23T07:40:16.355Z">
 <meta property="article:author" content="aman">
 <meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary_large_image">
@@ -405,8 +405,8 @@
 <h1 id="六、集群"><a href="#六、集群" class="headerlink" title="六、集群"></a>六、集群</h1><h2 id="Ⅰ-搭建集群"><a href="#Ⅰ-搭建集群" class="headerlink" title="Ⅰ.搭建集群"></a>Ⅰ.搭建集群</h2><p><strong>1.</strong> 复制配置文件 - <code>进入/kafka/config/</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看kafka服务</span><br>ps aux | grep kafka<br><span class="hljs-comment"># 复制文件</span><br><span class="hljs-built_in">cp</span> server.properties server-1.properties<br><span class="hljs-built_in">cp</span> server.properties server-2.properties<br></code></pre></td></tr></table></figure>
 
-<p><strong>2.</strong> 修改 <strong>properties</strong>文件中以下三个参数：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#----------------------------------#</span><br><span class="hljs-comment"># 0 1 2</span><br><span class="hljs-attr">broker.id</span>=<span class="hljs-string">2</span><br><span class="hljs-comment"># 9092 9093 9094</span><br><span class="hljs-attr">listeners</span>=<span class="hljs-string">PLAINTEXT://192.168.65.60:9094</span><br><span class="hljs-comment"># kafka-logs kafka-logs-1 kafka-logs-2</span><br><span class="hljs-attr">log.dir</span>=<span class="hljs-string">/usr/local/data/kafka-logs-2</span><br><span class="hljs-comment">#----------------------------------#</span><br></code></pre></td></tr></table></figure>
+<p><strong>2.</strong> 修改 <strong>properties</strong>文件中以下几个参数：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#----------------------------------#</span><br><span class="hljs-comment"># 0 1 2</span><br><span class="hljs-attr">broker.id</span>=<span class="hljs-string">2</span><br><span class="hljs-comment"># 9092 9093 9094</span><br><span class="hljs-attr">listeners</span>=<span class="hljs-string">PLAINTEXT://localhost:9094</span><br><span class="hljs-comment"># kafka-logs kafka-logs-1 kafka-logs-2</span><br><span class="hljs-attr">log.dir</span>=<span class="hljs-string">/usr/local/data/kafka-logs-2</span><br><span class="hljs-attr">zookeeper.connect</span>=<span class="hljs-string">localhost:2181</span><br><span class="hljs-comment">#----------------------------------#</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>3.</strong> 启动三台broker - <code>进入/kafka/bin/</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">./kafka-server-start.sh -daemon ../config/server.properties<br>./kafka-server-start.sh -daemon ../config/server-1.properties<br>./kafka-server-start.sh -daemon ../config/server-2.properties<br></code></pre></td></tr></table></figure>
@@ -539,6 +539,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2022/06/23/Kafka(%E4%BA%8C)-%E8%B8%A9%E5%9D%91%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" title="Kafka(二)-踩坑配置文件">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kafka(二)-踩坑配置文件</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
