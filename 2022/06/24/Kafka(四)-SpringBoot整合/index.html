@@ -16,26 +16,26 @@
   <meta name="author" content="aman">
   <meta name="keywords" content="aman">
   
-    <meta name="description" content="在Kafka(一)中，配置了服务器端的kafka，但是发现Java代码中不论怎么都被拒绝访问。">
+    <meta name="description" content="SpringBoot整合Kafka的使用。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kafka(二)-踩坑配置文件">
-<meta property="og:url" content="http://nullaman.com/2022/06/23/Kafka(%E4%BA%8C)-%E8%B8%A9%E5%9D%91%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:title" content="Kafka(四)-SpringBoot整合">
+<meta property="og:url" content="http://nullaman.com/2022/06/24/Kafka(%E5%9B%9B)-SpringBoot%E6%95%B4%E5%90%88/index.html">
 <meta property="og:site_name" content="aman">
-<meta property="og:description" content="在Kafka(一)中，配置了服务器端的kafka，但是发现Java代码中不论怎么都被拒绝访问。">
+<meta property="og:description" content="SpringBoot整合Kafka的使用。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-06-23T07:29:18.000Z">
-<meta property="article:modified_time" content="2022-06-24T03:33:12.058Z">
+<meta property="article:published_time" content="2022-06-24T03:28:05.000Z">
+<meta property="article:modified_time" content="2022-06-24T03:38:42.715Z">
 <meta property="article:author" content="aman">
 <meta property="article:tag" content="kafka">
-<meta property="article:tag" content="踩坑">
-<meta property="article:tag" content="linux">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="Spring">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Kafka(二)-踩坑配置文件 - aman</title>
+  <title>Kafka(四)-SpringBoot整合 - aman</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Kafka(二)-踩坑配置文件"></span>
+            <span id="subtitle" data-typed-text="Kafka(四)-SpringBoot整合"></span>
           
         </div>
 
@@ -214,8 +214,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-23 15:29" pubdate>
-          2022年6月23日 下午
+        <time datetime="2022-06-24 11:28" pubdate>
+          2022年6月24日 上午
         </time>
       </span>
     
@@ -226,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k 字
+          4.1k 字
         
       </span>
     
@@ -237,7 +237,7 @@
         
         
         
-          13 分钟
+          35 分钟
         
       </span>
     
@@ -283,27 +283,23 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Kafka(二)-踩坑配置文件</h1>
+            <h1 style="display: none">Kafka(四)-SpringBoot整合</h1>
             
             <div class="markdown-body">
               
-              <p>在Kafka(一)中，配置了服务器端的kafka，但是发现Java代码中不论怎么都被拒绝访问。</p>
+              <p>SpringBoot整合Kafka的使用。</p>
 <span id="more"></span>
 
-<p>在(一)服务器安装kafka，修改配置</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#kafka部署的机器ip和提供服务的端⼝号</span><br><span class="hljs-attr">listeners</span>=<span class="hljs-string">PLAINTEXT://localhost:9092</span><br></code></pre></td></tr></table></figure>
-<p>这样配置之后，在Java代码中，一直连接不上，报错拒绝连接。</p>
-<p>发现配置文件中有这么一段。<code>来自kafka3.1.0版本</code></p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment"></span><br><span class="hljs-comment">############################# Socket Server Settings #############################</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"># The address the socket server listens on. It will get the value returned from</span><br><span class="hljs-comment"># java.net.InetAddress.getCanonicalHostName() if not configured.</span><br><span class="hljs-comment">#   FORMAT:</span><br><span class="hljs-comment">#     listeners = listener_name://host_name:port</span><br><span class="hljs-comment">#   EXAMPLE:</span><br><span class="hljs-comment">#     listeners = PLAINTEXT://your.host.name:9092</span><br><span class="hljs-comment">#listeners=PLAINTEXT://:9092</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"># Hostname and port the broker will advertise to producers and consumers. If not set,</span><br><span class="hljs-comment"># it uses the value for &quot;listeners&quot; if configured.  Otherwise, it will use the value</span><br><span class="hljs-comment"># returned from java.net.InetAddress.getCanonicalHostName().</span><br><span class="hljs-comment">#advertised.listeners=PLAINTEXT://:9092</span><br></code></pre></td></tr></table></figure>
+<h1 id="1-引入依赖"><a href="#1-引入依赖" class="headerlink" title="1.引入依赖"></a>1.引入依赖</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.kafka<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-kafka<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
 
-<p>如果是在服务器中使用：打开这一段就完全足够</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">listeners</span>=<span class="hljs-string">PLAINTEXT://【localhost】:9092</span><br></code></pre></td></tr></table></figure>
-<p><strong>但是Java程序等，外部连接是连不上的.</strong></p>
-<ul>
-<li><strong>如果外部程序等需要连接，则打开</strong><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">advertised.listeners</span>=<span class="hljs-string">PLAINTEXT://【服务器公网ip】:9092</span><br></code></pre></td></tr></table></figure></li>
-</ul>
-<p>最后修改配置文件部分为：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">############################# Socket Server Settings #############################</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"># The address the socket server listens on. It will get the value returned from</span><br><span class="hljs-comment"># java.net.InetAddress.getCanonicalHostName() if not configured.</span><br><span class="hljs-comment">#   FORMAT:</span><br><span class="hljs-comment">#     listeners = listener_name://host_name:port</span><br><span class="hljs-comment">#   EXAMPLE:</span><br><span class="hljs-comment">#     listeners = PLAINTEXT://your.host.name:9092</span><br><span class="hljs-comment">#listeners=PLAINTEXT://:9092</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"># Hostname and port the broker will advertise to producers and consumers. If not set,</span><br><span class="hljs-comment"># it uses the value for &quot;listeners&quot; if configured.  Otherwise, it will use the value</span><br><span class="hljs-comment"># returned from java.net.InetAddress.getCanonicalHostName().</span><br><span class="hljs-attr">advertised.listeners</span>=<span class="hljs-string">PLAINTEXT://【公网ip】:9092</span><br></code></pre></td></tr></table></figure>
+<h1 id="2-配置文件application-yml"><a href="#2-配置文件application-yml" class="headerlink" title="2.配置文件application.yml"></a>2.配置文件application.yml</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">5080</span><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">kafka:</span><br>    <span class="hljs-attr">bootstrap-servers:</span> <span class="hljs-string">localhost:9092</span><br>    <span class="hljs-comment"># ⽣产者</span><br>    <span class="hljs-attr">producer:</span><br>      <span class="hljs-comment"># 设置⼤于0的值，则客户端会将发送失败的记录重新发送</span><br>      <span class="hljs-attr">retries:</span> <span class="hljs-number">3</span><br>      <span class="hljs-attr">batch-size:</span> <span class="hljs-number">16384</span><br>      <span class="hljs-attr">buffer-memory:</span> <span class="hljs-number">33554432</span><br>      <span class="hljs-attr">acks:</span> <span class="hljs-number">1</span><br>      <span class="hljs-comment"># 指定消息key和消息体的编解码⽅式</span><br>      <span class="hljs-attr">key-serializer:</span> <span class="hljs-string">org.apache.kafka.common.serialization.StringSerializer</span><br>      <span class="hljs-attr">value-serializer:</span> <span class="hljs-string">org.apache.kafka.common.serialization.StringSerializer</span><br>    <span class="hljs-comment"># 消费者</span><br>    <span class="hljs-attr">consumer:</span><br>      <span class="hljs-attr">group-id:</span> <span class="hljs-string">default-group</span><br>      <span class="hljs-attr">enable-auto-commit:</span> <span class="hljs-literal">false</span><br>      <span class="hljs-attr">auto-offset-reset:</span> <span class="hljs-string">earliest</span><br>      <span class="hljs-attr">key-deserializer:</span> <span class="hljs-string">org.apache.kafka.common.serialization.StringDeserializer</span><br>      <span class="hljs-attr">value-deserializer:</span> <span class="hljs-string">org.apache.kafka.common.serialization.StringDeserializer</span><br>      <span class="hljs-attr">max-poll-records:</span> <span class="hljs-number">500</span><br><br>    <span class="hljs-attr">listener:</span><br>      <span class="hljs-comment"># RECORD:当每⼀条记录被消费者监听器（ListenerConsumer）处理之后提交</span><br>      <span class="hljs-comment"># BATCH:当每⼀批poll()的数据被消费者监听器（ListenerConsumer）处理之后提交</span><br>      <span class="hljs-comment"># TIME:当每⼀批poll()的数据被消费者监听器（ListenerConsumer）处理之后，距离上次提交时间⼤于TIME时提交</span><br>      <span class="hljs-comment"># COUNT:当每⼀批poll()的数据被消费者监听器（ListenerConsumer）处理之后，被处理record数量⼤于等于COUNT时提交</span><br>      <span class="hljs-comment"># COUNT_TIME: TIME | COUNT 有⼀个条件满⾜时提交</span><br>      <span class="hljs-comment"># MANUAL:当每⼀批poll()的数据被消费者监听器（ListenerConsumer）处理之后,⼿动调⽤Acknowledgment.acknowledge()后提交</span><br>      <span class="hljs-comment"># MANUAL_IMMEDIATE:⼿动调⽤Acknowledgment.acknowledge()后⽴即提交，⼀般使⽤这种</span><br>      <span class="hljs-attr">ack-mode:</span> <span class="hljs-string">MANUAL_IMMEDIATE</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="3-消息生产者接口"><a href="#3-消息生产者接口" class="headerlink" title="3.消息生产者接口"></a>3.消息生产者接口</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.kafka.core.KafkaTemplate;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/msg&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyKafkaController</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">static</span> <span class="hljs-type">String</span> <span class="hljs-variable">TOPIC_NAME</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;topic-11112&quot;</span>;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> KafkaTemplate&lt;String, String&gt; kafkaTemplate;<br><br>    <span class="hljs-meta">@RequestMapping(&quot;/send&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">sendMessage</span><span class="hljs-params">()</span> &#123;<br><br>        kafkaTemplate.send(TOPIC_NAME, <span class="hljs-number">0</span>, <span class="hljs-string">&quot;key&quot;</span>, <span class="hljs-string">&quot;this is a message!&quot;</span>);<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;send success!&quot;</span>;<br><br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="4-消费者"><a href="#4-消费者" class="headerlink" title="4.消费者"></a>4.消费者</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecord;<br><span class="hljs-keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecords;<br><span class="hljs-keyword">import</span> org.springframework.kafka.annotation.KafkaListener;<br><span class="hljs-keyword">import</span> org.springframework.kafka.annotation.PartitionOffset;<br><span class="hljs-keyword">import</span> org.springframework.kafka.annotation.TopicPartition;<br><span class="hljs-keyword">import</span> org.springframework.kafka.support.Acknowledgment;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Component;<br><br><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyConsumer</span> &#123;<br><br>    <span class="hljs-comment">// 一条一条消息处理</span><br>    <span class="hljs-meta">@KafkaListener(topics = &quot;topic-11112&quot;, groupId = &quot;MyGroup1&quot;)</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">listenGroup</span><span class="hljs-params">(ConsumerRecord&lt;String, String&gt; record, Acknowledgment ack)</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> record.value();<br>        System.out.println(value);<br>        System.out.println(record);<br>        <span class="hljs-comment">//手动提交offset，需要在application.yml中配置enable-auto-commit: false</span><br>        ack.acknowledge();<br>    &#125;<br>    <br>    <span class="hljs-comment">// 批量处理：ConsumerRecords&lt;String, String&gt; records</span><br>    <span class="hljs-meta">@KafkaListener(topics = &quot;topic-11112&quot;, groupId = &quot;MyGroup2&quot;)</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">listensGroup</span><span class="hljs-params">(ConsumerRecords&lt;String, String&gt; records, Acknowledgment ack)</span> &#123;<br>        <span class="hljs-comment">// records一组消息</span><br>    &#125;<br>    <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="5-消费者中配置消费主题、分区和偏移量"><a href="#5-消费者中配置消费主题、分区和偏移量" class="headerlink" title="5.消费者中配置消费主题、分区和偏移量"></a>5.消费者中配置消费主题、分区和偏移量</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecord;<br><span class="hljs-keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecords;<br><span class="hljs-keyword">import</span> org.springframework.kafka.annotation.KafkaListener;<br><span class="hljs-keyword">import</span> org.springframework.kafka.annotation.PartitionOffset;<br><span class="hljs-keyword">import</span> org.springframework.kafka.annotation.TopicPartition;<br><span class="hljs-keyword">import</span> org.springframework.kafka.support.Acknowledgment;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Component;<br><br><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyConsumer</span> &#123;<br><br>    <span class="hljs-meta">@KafkaListener(</span><br><span class="hljs-meta">            groupId = &quot;testGroup&quot;,</span><br><span class="hljs-meta">            topicPartitions = &#123;</span><br><span class="hljs-meta">                    @TopicPartition(topic = &quot;topic1&quot;, partitions = &#123;&quot;0&quot;, &quot;1&quot;&#125;),</span><br><span class="hljs-meta">                    @TopicPartition(topic = &quot;topic2&quot;, partitions = &quot;0&quot;,</span><br><span class="hljs-meta">                            partitionOffsets = @PartitionOffset(partition = &quot;1&quot;, initialOffset = &quot;100&quot;))&#125;,</span><br><span class="hljs-meta">            //concurrency就是同组下的消费者个数，就是并发消费数，建议小于等于分区总数</span><br><span class="hljs-meta">            concurrency = &quot;3&quot;</span><br><span class="hljs-meta">    )</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">listenGroupPro</span><span class="hljs-params">(ConsumerRecord&lt;String, String&gt; record, Acknowledgment ack)</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> record.value();<br>        System.out.println(value);<br>        System.out.println(record);<br>        <span class="hljs-comment">//手动提交offset</span><br>        ack.acknowledge();<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
               
             </div>
             <hr/>
@@ -344,9 +340,9 @@
       
         <a href="/tags/kafka/">#kafka</a>
       
-        <a href="/tags/%E8%B8%A9%E5%9D%91/">#踩坑</a>
+        <a href="/tags/SpringBoot/">#SpringBoot</a>
       
-        <a href="/tags/linux/">#linux</a>
+        <a href="/tags/Spring/">#Spring</a>
       
     </div>
   
@@ -358,8 +354,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Kafka(二)-踩坑配置文件</div>
-      <div>http://nullaman.com/2022/06/23/Kafka(二)-踩坑配置文件/</div>
+      <div>Kafka(四)-SpringBoot整合</div>
+      <div>http://nullaman.com/2022/06/24/Kafka(四)-SpringBoot整合/</div>
     </div>
     <div class="license-meta">
       
@@ -371,7 +367,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月23日</div>
+          <div>2022年6月24日</div>
         </div>
       
       
@@ -401,18 +397,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/06/24/Kafka(%E4%B8%89)-%E7%94%9F%E4%BA%A7%E8%80%85%E5%92%8C%E6%B6%88%E8%B4%B9%E8%80%85%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3-Java/" title="Kafka(三)-生产者和消费者配置详解-Java">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Kafka(三)-生产者和消费者配置详解-Java</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/06/22/Kafka(%E4%B8%80)-%E5%9F%BA%E7%A1%80/" title="Kafka(一)-基础">
-                        <span class="hidden-mobile">Kafka(一)-基础</span>
+                      <a href="/2022/06/24/Kafka(%E4%B8%89)-%E7%94%9F%E4%BA%A7%E8%80%85%E5%92%8C%E6%B6%88%E8%B4%B9%E8%80%85%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3-Java/" title="Kafka(三)-生产者和消费者配置详解-Java">
+                        <span class="hidden-mobile">Kafka(三)-生产者和消费者配置详解-Java</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
