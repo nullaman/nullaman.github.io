@@ -1,0 +1,831 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/bgtop.png">
+  <link rel="icon" href="/img/bgtop.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="aman">
+  <meta name="keywords" content="aman">
+  
+    <meta name="description" content="kafka集群中的controller、rebalance、HW、LEO…kafka优化：防消息丢失、防重复消费、顺序消费、消息积压…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka(五)-集群、优化">
+<meta property="og:url" content="http://nullaman.com/2022/06/24/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="aman">
+<meta property="og:description" content="kafka集群中的controller、rebalance、HW、LEO…kafka优化：防消息丢失、防重复消费、顺序消费、消息积压…">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://nullaman.com/images/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/%E9%9B%86%E7%BE%A4%E5%9B%BE%E8%A7%A3.png">
+<meta property="og:image" content="http://nullaman.com/images/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/%E9%9B%86%E7%BE%A4%E5%88%9B%E5%BB%BAtopic%E5%90%8E%E6%9F%A5%E7%9C%8B%E8%AF%A6%E6%83%85.png">
+<meta property="og:image" content="http://nullaman.com/images/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/HW%E5%92%8CLEO.png">
+<meta property="og:image" content="http://nullaman.com/images/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B-%E6%B6%88%E8%B4%B9%E8%80%85%E8%BD%AC%E5%8F%91%E5%88%B0topic-%E4%B8%8D%E5%B8%B8%E7%94%A8.png">
+<meta property="og:image" content="http://nullaman.com/images/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/%E5%AE%9E%E7%8E%B0%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97%E6%96%B9%E6%A1%88.png">
+<meta property="article:published_time" content="2022-06-24T04:31:15.000Z">
+<meta property="article:modified_time" content="2022-06-24T09:32:08.489Z">
+<meta property="article:author" content="aman">
+<meta property="article:tag" content="kafka">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://nullaman.com/images/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/%E9%9B%86%E7%BE%A4%E5%9B%BE%E8%A7%A3.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Kafka(五)-集群、优化 - aman</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"nullaman.com","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>aman</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Kafka(五)-集群、优化"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        aman
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-24 12:31" pubdate>
+          2022年6月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kafka(五)-集群、优化</h1>
+            
+            <div class="markdown-body">
+              
+              <p>kafka集群中的controller、rebalance、HW、LEO…<br>kafka优化：防消息丢失、防重复消费、顺序消费、消息积压…</p>
+<span id="more"></span>
+
+<h1 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h1><blockquote>
+<p>了解kafka集群中的controller、rebalance、HW、LEO。详解。</p>
+</blockquote>
+<p><img src="/images/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/%E9%9B%86%E7%BE%A4%E5%9B%BE%E8%A7%A3.png" srcset="/img/loading.gif" lazyload alt="集群图解"></p>
+<h2 id="1-controller"><a href="#1-controller" class="headerlink" title="1.controller"></a>1.controller</h2><blockquote>
+<p>之前集群部署，创建主题、副本、分区后，查看<br><img src="/images/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/%E9%9B%86%E7%BE%A4%E5%88%9B%E5%BB%BAtopic%E5%90%8E%E6%9F%A5%E7%9C%8B%E8%AF%A6%E6%83%85.png" srcset="/img/loading.gif" lazyload alt="集群创建topic后查看详情"></p>
+</blockquote>
+<p><strong>集群中谁来充当controller？</strong></p>
+<blockquote>
+<p>每个broker启动时会向zk创建⼀个临时序号节点，获得的序号最⼩的那个broker将会作为集群中的controller，</p>
+</blockquote>
+<p><strong>controller负责这么⼏件事：</strong></p>
+<ul>
+<li>当集群中有⼀个副本的leader挂掉，需要在集群中选举出⼀个新的leader，选举的规则是从 <strong>“<code>isr</code>”</strong> 集合中最左边获得。</li>
+<li>当集群中有broker新增或减少，controller会同步信息给其他broker</li>
+<li>当集群中有分区新增或减少，controller会同步信息给其他broker</li>
+</ul>
+<h2 id="2-rebalance机制"><a href="#2-rebalance机制" class="headerlink" title="2.rebalance机制"></a>2.rebalance机制</h2><p>rebalance中文含义为再平衡。它本质上是一组协议，它规定了一个consumer group是如何达成一致来分配订阅topic的所有分区的。</p>
+<ul>
+<li><p><strong>前提：消费组中的消费者没有指明分区来消费</strong></p>
+</li>
+<li><p><strong>触发的条件</strong> ：当消费组中的消费者和分区的关系发⽣变化的时候</p>
+</li>
+<li><p><strong>分区分配的策略</strong> ：在 <strong>“<code>rebalance之前</code>”</strong> 分区怎么分配会有这么三种策略：</p>
+<ul>
+<li><strong>range</strong> ：根据公示计算得到每个消费消费哪⼏个分区：<br>  前⾯的消费者分配到的分区个数是：<code>(分区总数/消费者数量)+1</code><br>  之后的消费者分配到的分区个数是：<code>分区总数/消费者数量</code></li>
+<li><strong>round-robin</strong> ：轮询：⼤家轮着来</li>
+<li><strong>sticky</strong> ：粘合策略，如果需要rebalance，会在之前已分配的基础上调整，不会改变之前的分配情况。<br>  如果这个策略没有开，那么就要进⾏全部的重新分配。建议开启。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>举例：假如有1个主题(topic)，这个主题有7个分区(partition)，groupA消费组中有3个消费者(consumer)。这些消费者是怎么分配订阅这个主题中的分区的？<br>不同策略对应不同的结果。<br>range：计算得出第一个消费者消费分区为(7&#x2F;3)+1&#x3D;3个，那么c1分配到分区p1p2p3，c2分配到p4p5，c3分配到p6p7<br>round-robin：轮询：c1分配到分区p1p4p7，c2分配到分区p2p5，c3分配到分区p3p6<br>sticky：粘合策略，如果在基于range和round-robin分配完后，如果挂掉了一个消费者，是否重新分配全部的分区。<br>比如开启round-robin后，c3消费者挂了，那么p3p6分区是轮询分派给c1c2，还是将分区c1-7全部重新分配。<br>开启sticky的话，c1变为p1p4p7p3，c2变为p2p5p6，未开启则c1为p1p3p5p7，c2为p2p4p6</p>
+</blockquote>
+<h2 id="3-HW和LEO"><a href="#3-HW和LEO" class="headerlink" title="3.HW和LEO"></a>3.HW和LEO</h2><ul>
+<li><p>LEO是某个副本最后消息的消息位置（log-end-offset）</p>
+</li>
+<li><p>HW是已完成同步的位置。<br>消息在写⼊broker时，且每个broker完成这条消息的同步后，HW才会变化。在这之前消费者是消费不到这条消息的。<br>在同步完成之后，HW更新之后，消费者才能消费到这条消息，这样的⽬的是防⽌消息的丢失。</p>
+</li>
+</ul>
+<p><img src="/images/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/HW%E5%92%8CLEO.png" srcset="/img/loading.gif" lazyload alt="HW和LEO"></p>
+<h1 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h1><h2 id="1-如何防⽌消息丢失"><a href="#1-如何防⽌消息丢失" class="headerlink" title="1.如何防⽌消息丢失"></a>1.如何防⽌消息丢失</h2><ul>
+<li>⽣产者：<ul>
+<li>使⽤同步发送 </li>
+<li>把ack设成1或者all，并且设置同步的分区数&gt;&#x3D;2</li>
+</ul>
+</li>
+<li>消费者：<ul>
+<li>把⾃动提交改成⼿动提交</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-如何防⽌重复消费"><a href="#2-如何防⽌重复消费" class="headerlink" title="2.如何防⽌重复消费"></a>2.如何防⽌重复消费</h2><p>在防⽌消息丢失的⽅案中，如果⽣产者发送完消息后，因为⽹络抖动，没有收到ack，但实际上broker已经收到了。<br>此时⽣产者会进⾏重试，于是broker就会收到多条相同的消息，⽽造成消费者的重复消费。</p>
+<p><strong>怎么解决：</strong></p>
+<ul>
+<li>⽣产者关闭重试：会造成丢消息（不建议）</li>
+<li>消费者解决<strong>⾮幂等性</strong>消费问题：所谓的幂等性：<strong>多次访问的结果是⼀样的。</strong><br>  对于rest的请求（get（幂等）、post（⾮幂等）、put（幂等）、delete（幂等））<br>  解决⽅案：<ul>
+<li>在数据库中创建联合主键，防⽌相同的主键创建出多条记录</li>
+<li>使⽤分布式锁，以业务id为锁。保证只有⼀条记录能够创建成功</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-如何做到消息的顺序消费"><a href="#3-如何做到消息的顺序消费" class="headerlink" title="3.如何做到消息的顺序消费"></a>3.如何做到消息的顺序消费</h2><blockquote>
+<p>kafka的顺序消费使⽤场景不多，因为牺牲掉了性能，<br>但是⽐如<strong>rocketMQ</strong>在这⼀块有专⻔的功能已设计好。</p>
+</blockquote>
+<ul>
+<li><strong>⽣产者</strong> ：保证消息按顺序消费，且消息不丢失——使⽤同步的发送，ack设置成⾮0的值。</li>
+<li><strong>消费者</strong> ：主题只能设置⼀个分区，消费组中只能有⼀个消费者</li>
+</ul>
+<h2 id="4-如何解决消息积压问题"><a href="#4-如何解决消息积压问题" class="headerlink" title="4.如何解决消息积压问题"></a>4.如何解决消息积压问题</h2><ul>
+<li><p><strong>消息积压问题的出现</strong></p>
+<p>  消息的消费者的<strong>消费速度远赶不上生产者的生产消息的速度</strong>，导致kafka中有⼤量的数据没有被消费。<br>  随着没有被消费的数据堆积越多，消费者寻址的性能会越来越差，最后导致整个kafka对外提供的服务的性能很差，<br>  从而造成其他服务也访问速度变慢，造成服务雪崩。</p>
+</li>
+<li><p><strong>消息积压的解决⽅案</strong>    </p>
+<ul>
+<li>在这个消费者中，使用<strong>多线程</strong>，充分利用机器的性能进⾏消费消息。</li>
+<li>通过业务的架构设计，提升业务层面消费的性能。</li>
+<li><strong>创建</strong>多个消费组，多个消费者，部署到<strong>其他机器</strong>上，⼀起消费，提高消费者的消费速度。</li>
+<li><code>创建⼀个消费者，该消费者在kafka另建⼀个主题，配上多个分区，多个分区再配上多个消费者。   该消费者将poll下来的消息，不进⾏消费，直接转发到新建的主题上。   此时，新的主题的多个分区的多个消费者就开始⼀起消费了。</code> <strong>【——不常用】</strong></li>
+</ul>
+</li>
+</ul>
+<p>【——不常用——实现方案图片】<br><img src="/images/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B-%E6%B6%88%E8%B4%B9%E8%80%85%E8%BD%AC%E5%8F%91%E5%88%B0topic-%E4%B8%8D%E5%B8%B8%E7%94%A8.png" srcset="/img/loading.gif" lazyload alt="消息积压-消费者转发到topic-不常用"></p>
+<h2 id="5-实现延时队列的效果"><a href="#5-实现延时队列的效果" class="headerlink" title="5.实现延时队列的效果"></a>5.实现延时队列的效果</h2><ul>
+<li><p><strong>应用场景</strong><br>  订单创建后，超过30分钟没有⽀付，则需要取消订单，这种场景可以通过延时队列来实现</p>
+</li>
+<li><p><strong>具体⽅案</strong></p>
+<ul>
+<li>Ⅰ. kafka中创建创建相应的主题</li>
+<li>Ⅱ. 消费者消费该主题的消息（轮询）</li>
+<li>Ⅲ. 消费者消费消息时判断消息的创建时间和当前时间是否超过30分钟（前提是订单没⽀付）<ul>
+<li>如果是：去数据库中修改订单状态为已取消</li>
+<li>如果否：记录当前消息的offset，并不再继续消费之后的消息。<br>  等待1分钟后，再次向kafka拉取该offset及之后的消息，继续进⾏判断，以此反复。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/%E5%AE%9E%E7%8E%B0%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97%E6%96%B9%E6%A1%88.png" srcset="/img/loading.gif" lazyload alt="实现延时队列方案"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Java/Kafka/" class="category-chain-item">Kafka</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/kafka/">#kafka</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kafka(五)-集群、优化</div>
+      <div>http://nullaman.com/2022/06/24/Kafka(五)-集群、优化/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>aman</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月24日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/24/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/" title="Kafka-eagle监控平台">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kafka-eagle监控平台</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/24/Kafka(%E5%9B%9B)-SpringBoot%E6%95%B4%E5%90%88/" title="Kafka(四)-SpringBoot整合">
+                        <span class="hidden-mobile">Kafka(四)-SpringBoot整合</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/nullaman" target="_blank" rel="nofollow noopener"><span>阿瞒</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/nullaman" target="_blank" rel="nofollow noopener"><span>aman</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
