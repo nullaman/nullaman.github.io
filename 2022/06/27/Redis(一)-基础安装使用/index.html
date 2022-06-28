@@ -16,33 +16,25 @@
   <meta name="author" content="aman">
   <meta name="keywords" content="aman">
   
-    <meta name="description" content="简易搭建版。Kafka-eagle监控平台。">
+    <meta name="description" content="重温Redis。基础、安装、使用、">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kafka-eagle监控平台">
-<meta property="og:url" content="http://nullaman.com/2022/06/24/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/index.html">
+<meta property="og:title" content="Redis(一)-基础安装使用">
+<meta property="og:url" content="http://nullaman.com/2022/06/27/Redis(%E4%B8%80)-%E5%9F%BA%E7%A1%80%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="aman">
-<meta property="og:description" content="简易搭建版。Kafka-eagle监控平台。">
+<meta property="og:description" content="重温Redis。基础、安装、使用、">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://nullaman.com/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE.png">
-<meta property="og:image" content="http://nullaman.com/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E4%BF%AE%E6%94%B9%E5%90%8E%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B61.png">
-<meta property="og:image" content="http://nullaman.com/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E4%BF%AE%E6%94%B9%E5%90%8E%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B62.png">
-<meta property="og:image" content="http://nullaman.com/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E5%90%AF%E5%8A%A8%E6%88%90%E5%8A%9F.png">
-<meta property="og:image" content="http://nullaman.com/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E8%AE%BF%E9%97%AEadmin123456.png">
-<meta property="og:image" content="http://nullaman.com/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E8%BF%9B%E5%85%A51.png">
-<meta property="og:image" content="http://nullaman.com/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E8%BF%9B%E5%85%A52.png">
-<meta property="article:published_time" content="2022-06-24T09:33:59.000Z">
-<meta property="article:modified_time" content="2022-06-24T09:55:11.297Z">
+<meta property="article:published_time" content="2022-06-27T03:43:23.000Z">
+<meta property="article:modified_time" content="2022-06-28T04:32:22.651Z">
 <meta property="article:author" content="aman">
-<meta property="article:tag" content="kafka">
-<meta property="article:tag" content="Kafka-eagle">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://nullaman.com/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Kafka-eagle监控平台 - aman</title>
+  <title>Redis(一)-基础安装使用 - aman</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -205,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Kafka-eagle监控平台"></span>
+            <span id="subtitle" data-typed-text="Redis(一)-基础安装使用"></span>
           
         </div>
 
@@ -221,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-24 17:33" pubdate>
-          2022年6月24日 下午
+        <time datetime="2022-06-27 11:43" pubdate>
+          2022年6月27日 中午
         </time>
       </span>
     
@@ -233,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          906 字
         
       </span>
     
@@ -244,7 +236,7 @@
         
         
         
-          11 分钟
+          8 分钟
         
       </span>
     
@@ -290,40 +282,49 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Kafka-eagle监控平台</h1>
+            <h1 style="display: none">Redis(一)-基础安装使用</h1>
             
             <div class="markdown-body">
               
-              <p>简易搭建版。Kafka-eagle监控平台。</p>
+              <p>重温Redis。基础、安装、使用、</p>
 <span id="more"></span>
 
-<h1 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h1><h2 id="1-下载"><a href="#1-下载" class="headerlink" title="1.下载"></a>1.下载</h2><p>官网下载地址</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="http://download.kafka-eagle.org/">http://download.kafka-eagle.org/</a></p>
+<h1 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h1><h2 id="1-下载"><a href="#1-下载" class="headerlink" title="1.下载"></a>1.下载</h2><blockquote>
+<p>官网：<a target="_blank" rel="noopener" href="https://redis.io/">https://redis.io/</a><br>下载：<a target="_blank" rel="noopener" href="https://redis.io/download/">https://redis.io/download/</a><br>旧版：<a target="_blank" rel="noopener" href="https://download.redis.io/releases/">https://download.redis.io/releases/</a></p>
 </blockquote>
-<h2 id="2-上传服务器、解压"><a href="#2-上传服务器、解压" class="headerlink" title="2.上传服务器、解压"></a>2.上传服务器、解压</h2><ul>
-<li>将文件上穿到目录 &#x2F;usr&#x2F;local&#x2F;kafka-eagle&#x2F; 下</li>
-<li>解压得到efak-web-2.1.0-bin.tar.gz，再解压得到含有bin、conf、db….的<br>（不知道为啥，我解压了两次，官网下载的是kafka-eagle-bin-2.1.0.tar.gz，然后解压得到上面的）<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar -zxvf efak-web-2.1.0-bin.tar.gz<br></code></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="3-配置环境"><a href="#3-配置环境" class="headerlink" title="3.配置环境"></a>3.配置环境</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 得到解压目录</span><br><span class="hljs-built_in">pwd</span><br><span class="hljs-comment"># 新增环境变量</span><br>vim /etc/profile<br><span class="hljs-comment"># 生效</span><br><span class="hljs-built_in">source</span> /etc/profile<br></code></pre></td></tr></table></figure>
 <ul>
-<li>vim &#x2F;etc&#x2F;profile 新增这两行<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> KE_HOME=/usr/local/kafka-eagle<br><span class="hljs-built_in">export</span> PATH=<span class="hljs-variable">$PATH</span>:<span class="hljs-variable">$KE_HOME</span>/bin<br></code></pre></td></tr></table></figure>
-<img src="/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE.png" srcset="/img/loading.gif" lazyload alt="环境变量配置.png"></li>
+<li>我这里选择的是redis-6.2.1.tar.gz</li>
 </ul>
-<h2 id="4-修改kafka-eagle的配置⽂件"><a href="#4-修改kafka-eagle的配置⽂件" class="headerlink" title="4.修改kafka-eagle的配置⽂件"></a>4.修改kafka-eagle的配置⽂件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> config<br>vim system-config.properties<br></code></pre></td></tr></table></figure>
+<h2 id="2-上传、解压、安装"><a href="#2-上传、解压、安装" class="headerlink" title="2.上传、解压、安装"></a>2.上传、解压、安装</h2><p>上传文件到服务器路径 <code>/usr/local/</code> </p>
 <ul>
-<li><strong>修改前：</strong><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment"># 修改前</span><br><span class="hljs-comment">######################################</span><br><span class="hljs-comment"># multi zookeeper &amp; kafka cluster list</span><br><span class="hljs-comment"># Settings prefixed with &#x27;kafka.eagle.&#x27; will be deprecated, use &#x27;efak.&#x27; instead</span><br><span class="hljs-comment">######################################</span><br><span class="hljs-attr">efak.zk.cluster.alias</span>=<span class="hljs-string">cluster1,cluster2</span><br><span class="hljs-attr">cluster1.zk.list</span>=<span class="hljs-string">tdn1:2181,tdn2:2181,tdn3:2181</span><br><span class="hljs-attr">cluster2.zk.list</span>=<span class="hljs-string">xdn10:2181,xdn11:2181,xdn12:2181</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">######################################</span><br><span class="hljs-comment"># kafka mysql jdbc driver address</span><br><span class="hljs-comment">######################################</span><br><span class="hljs-attr">efak.driver</span>=<span class="hljs-string">com.mysql.cj.jdbc.Driver</span><br><span class="hljs-attr">efak.url</span>=<span class="hljs-string">jdbc:mysql://127.0.0.1:3306/ke?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</span><br><span class="hljs-attr">efak.username</span>=<span class="hljs-string">root</span><br><span class="hljs-attr">efak.password</span>=<span class="hljs-string">123456</span><br></code></pre></td></tr></table></figure></li>
-<li><strong>修改后：</strong><br><img src="/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E4%BF%AE%E6%94%B9%E5%90%8E%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B61.png" srcset="/img/loading.gif" lazyload alt="修改后配置文件1.png"><br><img src="/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E4%BF%AE%E6%94%B9%E5%90%8E%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B62.png" srcset="/img/loading.gif" lazyload alt="修改后的配置文件2.png"></li>
+<li><p>解压</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar -xzvf redis-6.2.1.tar.gz<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>安装 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># gcc --version 查看gcc版本</span><br><span class="hljs-comment"># 如果没有安装gcc，需要安装gcc</span><br>yun install gcc<br><br><span class="hljs-built_in">cd</span> /usr/local/redis-6.2.1/<br><span class="hljs-comment"># 编译</span><br>make<br><span class="hljs-comment"># 安装</span><br>make install<br></code></pre></td></tr></table></figure>
+<p>安装完成后文件生成，默认路径为 &#x2F;usr&#x2F;local&#x2F;bin&#x2F;</p>
+</li>
 </ul>
-<h2 id="5-启动"><a href="#5-启动" class="headerlink" title="5.启动"></a>5.启动</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sh ke.sh start<br></code></pre></td></tr></table></figure>
+<h2 id="3-修改配置"><a href="#3-修改配置" class="headerlink" title="3.修改配置"></a>3.修改配置</h2><ul>
+<li>修改配置文件<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 进入redis目录</span><br><span class="hljs-built_in">cd</span> /usr/local/redis-6.2.1/<br><span class="hljs-comment"># 备份配置文件</span><br><span class="hljs-built_in">cp</span> redis.conf redis.conf.bak<br><span class="hljs-comment"># 将文件复制一份到启动目录</span><br><span class="hljs-built_in">cp</span> redis.conf ../bin/redis-conf<br><span class="hljs-comment"># 修改启动目录的配置</span><br><span class="hljs-built_in">cd</span> /usr/locl/bin<br>vim redis-conf<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>修改三个配置:（默认配置）</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment"># 后台启动</span><br><span class="hljs-attr">daemonize</span> <span class="hljs-string">no</span><br><span class="hljs-comment">#外网访问</span><br><span class="hljs-attr">bind</span> <span class="hljs-string">127.0.0.1 -::1</span><br><span class="hljs-comment"># 安全模式</span><br><span class="hljs-attr">protected-mode</span> <span class="hljs-string">yes</span><br><span class="hljs-comment"># 设置密码</span><br><span class="hljs-comment"># requirepass foobared </span><br></code></pre></td></tr></table></figure>
 
-<p><img src="/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E5%90%AF%E5%8A%A8%E6%88%90%E5%8A%9F.png" srcset="/img/loading.gif" lazyload alt="启动成功.png"></p>
-<hr>
-<h2 id="6-访问"><a href="#6-访问" class="headerlink" title="6.访问"></a>6.访问</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="http://127.0.0.1:8048/">http://127.0.0.1:8048</a><br>帐号：admin<br>密码：123456</p>
+<p><strong>修改后</strong></p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment"># 后台启动</span><br><span class="hljs-attr">daemonize</span> <span class="hljs-string">yes</span><br><span class="hljs-comment">#外网访问，或者 直接注释掉</span><br><span class="hljs-attr">bind</span> <span class="hljs-string">0.0.0.0</span><br><span class="hljs-comment"># 安全模式</span><br><span class="hljs-attr">protected-mode</span> <span class="hljs-string">no</span><br><span class="hljs-comment"># 设置密码</span><br><span class="hljs-attr">requirepass</span>  <span class="hljs-string">【密码】</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="4-启动"><a href="#4-启动" class="headerlink" title="4.启动"></a>4.启动</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">redis-server redis-conf<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-可视化工具"><a href="#5-可视化工具" class="headerlink" title="5.可视化工具"></a>5.可视化工具</h2><ul>
+<li>使用工具AnotherRedisDesktopManager<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/qishibo/AnotherRedisDesktopManager">https://github.com/qishibo/AnotherRedisDesktopManager</a></p>
 </blockquote>
-<hr>
-<h2 id=""><a href="#" class="headerlink" title=""></a><img src="/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E8%AE%BF%E9%97%AEadmin123456.png" srcset="/img/loading.gif" lazyload alt="访问admin123456"></h2><h2 id="-1"><a href="#-1" class="headerlink" title=""></a><img src="/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E8%BF%9B%E5%85%A51.png" srcset="/img/loading.gif" lazyload alt="进入1.png"></h2><p><img src="/images/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/%E8%BF%9B%E5%85%A52.png" srcset="/img/loading.gif" lazyload alt="进入2.png"></p>
+</li>
+</ul>
+<h2 id="6-使用命令教程"><a href="#6-使用命令教程" class="headerlink" title="6.使用命令教程"></a>6.使用命令教程</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="http://www.redis.cn/commands.html">http://www.redis.cn/commands.html</a><br><a target="_blank" rel="noopener" href="http://doc.redisfans.com/">http://doc.redisfans.com/</a></p>
+</blockquote>
 
               
             </div>
@@ -341,12 +342,12 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Kafka/" class="category-chain-item">Kafka</a>
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
   
   
     <span>></span>
     
-  <a href="/categories/Kafka/Kafka-eagle/" class="category-chain-item">Kafka-eagle</a>
+  <a href="/categories/Java/Redis/" class="category-chain-item">Redis</a>
   
   
 
@@ -363,9 +364,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/kafka/">#kafka</a>
+        <a href="/tags/linux/">#linux</a>
       
-        <a href="/tags/Kafka-eagle/">#Kafka-eagle</a>
+        <a href="/tags/redis/">#redis</a>
       
     </div>
   
@@ -377,8 +378,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Kafka-eagle监控平台</div>
-      <div>http://nullaman.com/2022/06/24/Kafka-eagle监控平台/</div>
+      <div>Redis(一)-基础安装使用</div>
+      <div>http://nullaman.com/2022/06/27/Redis(一)-基础安装使用/</div>
     </div>
     <div class="license-meta">
       
@@ -390,7 +391,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月24日</div>
+          <div>2022年6月27日</div>
         </div>
       
       
@@ -420,9 +421,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/06/27/Redis(%E4%B8%80)-%E5%9F%BA%E7%A1%80%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/" title="Redis(一)-基础安装使用">
+                      <a href="/2022/06/28/Redis(%E4%BA%8C)-SpringBoot%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" title="Redis(二)-SpringBoot基本使用">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Redis(一)-基础安装使用</span>
+                        <span class="hidden-mobile">Redis(二)-SpringBoot基本使用</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -430,8 +431,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/06/24/Kafka(%E4%BA%94)-%E9%9B%86%E7%BE%A4%E3%80%81%E4%BC%98%E5%8C%96/" title="Kafka(五)-集群、优化">
-                        <span class="hidden-mobile">Kafka(五)-集群、优化</span>
+                      <a href="/2022/06/24/Kafka-eagle%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/" title="Kafka-eagle监控平台">
+                        <span class="hidden-mobile">Kafka-eagle监控平台</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
