@@ -1,0 +1,929 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/bgtop.png">
+  <link rel="icon" href="/img/bgtop.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="aman">
+  <meta name="keywords" content="aman">
+  
+    <meta name="description" content="Redis经典5种数据(String、List、Hash、Set、ZSet)以及3种 新?类型(BitMap、HyperLogLog、Geo)的类型介绍及落地运用。简单了解Stream类型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis(三)-9大类型">
+<meta property="og:url" content="http://nullaman.com/2022/06/30/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/index.html">
+<meta property="og:site_name" content="aman">
+<meta property="og:description" content="Redis经典5种数据(String、List、Hash、Set、ZSet)以及3种 新?类型(BitMap、HyperLogLog、Geo)的类型介绍及落地运用。简单了解Stream类型。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/BitMap.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/setbit.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/bitop.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/HyperLogLog.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/hll%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/Redis%E4%B9%8B%E7%88%B6%E5%AE%89%E8%92%82%E9%9B%B7%E6%96%AF%E5%9B%9E%E7%AD%94.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/%E5%9C%B0%E5%9B%BE%E4%B8%89%E6%AD%A5.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoAdd.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoHash.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoPos.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoDist.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoRadius.png">
+<meta property="og:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoRadiusByMember.png">
+<meta property="article:published_time" content="2022-06-30T05:39:10.194Z">
+<meta property="article:modified_time" content="2022-06-30T05:39:10.194Z">
+<meta property="article:author" content="aman">
+<meta property="article:tag" content="aman">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://nullaman.com/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/BitMap.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Redis(三)-9大类型 - aman</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"nullaman.com","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>aman</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Redis(三)-9大类型"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        aman
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-30 13:39" pubdate>
+          2022年6月30日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          71 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Redis(三)-9大类型</h1>
+            
+            <div class="markdown-body">
+              
+              <p>Redis经典<strong>5种</strong>数据(<strong>String、List、Hash、Set、ZSet</strong>)以及<strong>3种</strong> <code>新?</code>类型(<strong>BitMap、HyperLogLog、Geo</strong>)的类型介绍及落地运用。简单了解<strong>Stream</strong>类型。</p>
+<span id="more"></span>
+
+<ul>
+<li><p>基本介绍</p>
+<ul>
+<li>String(字符类型)</li>
+<li>Hash(散列类型)</li>
+<li>List(列表类型)</li>
+<li>Set(集合类型)</li>
+<li>SortedSet(有序集合类型，简称ZSet)</li>
+<li>Bitmap(位图)</li>
+<li>HyperLogLog(统计)</li>
+<li>GEO(地理)</li>
+<li>Stream(Redis Stream 主要用于消息队列（MQ，Message Queue）)</li>
+</ul>
+</li>
+<li><p><strong>3种新类型底层实质还是基础类型：</strong></p>
+<ul>
+<li><strong><code>BitMap ---&gt; String</code></strong></li>
+<li><strong><code>HyperLogLog ---&gt; String</code></strong></li>
+<li><strong><code>Geo ---&gt; ZSet</code></strong></li>
+</ul>
+</li>
+</ul>
+<h1 id="5种经典类型"><a href="#5种经典类型" class="headerlink" title="5种经典类型"></a>5种经典类型</h1><h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><ul>
+<li>常用命令<ul>
+<li>Ⅰ.单个和多个值的设置&#x2F;获取</li>
+<li>Ⅱ.递增递减，指定增减数值</li>
+<li>Ⅲ.获取字符串长度</li>
+<li>Ⅳ.分布式锁</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs bash">Ⅰ.<br><span class="hljs-comment"># 单个值的设置/获取</span><br><span class="hljs-built_in">set</span> 【key】 【value】<br>get 【key】<br><span class="hljs-comment"># 同时设置/获取多个键值</span><br>mset key value [key value ...]<br>mget key [key ...]<br><br>Ⅱ.<br><span class="hljs-comment"># 递增数字</span><br>inCr 【key】<br><span class="hljs-comment"># 增加指定的整数</span><br>inCrby 【key】 【increment】<br><span class="hljs-comment"># 递减数值</span><br>deCr 【key】<br><span class="hljs-comment"># 减少指定的整数</span><br>deCrby 【key】 【decrement】<br><br>Ⅲ.<br><span class="hljs-comment"># 获取字符串长度</span><br>strLen 【key】<br><br>Ⅳ.<br><span class="hljs-comment"># 分布式锁。例:set lock pay ex 10 nx =&gt; 设置key为lock，value为pay，10s后过期</span><br><span class="hljs-comment"># EX:key在多少秒之后过期</span><br><span class="hljs-comment"># PX:key在多少毫秒之后过期</span><br><span class="hljs-comment"># NX:当key不存在的时候，才创建key，效果等同于setnx</span><br><span class="hljs-comment"># XX:当key存在的时候，覆盖key</span><br>setNx 【key】 【value】<br><span class="hljs-built_in">set</span> 【key】 【value】 [EX seconds] [PX milliseconds] [NX|XX]<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>应用场景<ul>
+<li>比如视频的浏览数量(incr)</li>
+<li>文章的阅读量…</li>
+</ul>
+</li>
+</ul>
+<h2 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h2><ul>
+<li>常用命令<ul>
+<li>Ⅰ.一次[设置&#x2F;获取][一个&#x2F;多个]字段值</li>
+<li>Ⅱ.获取所有字段值</li>
+<li>Ⅲ.获取某个key内的全部数量</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">Ⅰ.<br><span class="hljs-comment"># 一次设置/获取一个字段值</span><br>hset 【key】 【field value】<br>hget 【key】 【field】<br><span class="hljs-comment"># 一次设置/获取多个字段值</span><br>hmset 【key】 【field value】 [field value ...]<br>hmget 【key】 【field】 [field ...]<br><br>Ⅱ.<br><span class="hljs-comment"># 获取所有字段值</span><br>hgetall 【key】<br><br>Ⅲ.<br><span class="hljs-comment"># 获取某个key内的全部数量</span><br>hlen 【key】<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>应用场景<br>JD购物车早期 设计目前不再采用，当前小中厂可用。</li>
+</ul>
+<h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><ul>
+<li><p>简单介绍：<br>一个<strong>双端链表</strong>的结构，容量是2的32次方减1个元素，大概40多亿，主要功能有push&#x2F;pop等，<br>一般用在栈、队列、消息队列等场景。</p>
+</li>
+<li><p>常用命令</p>
+<ul>
+<li>Ⅰ.向列表左&#x2F;右边添加元素</li>
+<li>Ⅱ.查看列表</li>
+<li>Ⅲ.获取列表中元素的个数</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash">Ⅰ.<br><span class="hljs-comment"># 向列表左边添加元素</span><br>lpush 【key】 【value】 [value ...]<br><span class="hljs-comment"># 向列表右边添加元素</span><br>rpush 【key】 【value】 [value ...]<br><br>Ⅱ.<br><span class="hljs-comment"># 查看列表</span><br>lrange key start stop<br><br>Ⅲ.<br><span class="hljs-comment"># 获取列表中元素的个数</span><br>llen key<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>应用场景<ul>
+<li>微信公众号订阅的消息<blockquote>
+<p>1 公众号1 和 公众号2，发布了文章分别是 11 和 22<br>2 我关注了这两个，只要他们发布了新文章，就会安装进我的List，【lpush likekey:我id 11 22】<br>3 查看自己的号订阅的全部文章，类似分页，下面0~10就是一次显示10条【lrange likekey:我id 0 9】</p>
+</blockquote>
+</li>
+<li>商品评论列表<blockquote>
+<p>需求1：用户针对某一商品发布评论，一个商品会被不同的用户进行评论，保存商品评论时，要按时间顺序排序<br>需要2：用户在前端页面查询该商品的评论，需要按照时间顺序降序排序。</p>
+<blockquote>
+<p>使用list存储商品评论信息，key是该商品的id，value是商品评论信息，<br>【lpush items:comment:1001 {“id”:1001,”name”:”hw”,”date”:”信息”,”content”:”content”} 】</p>
+</blockquote>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h2><ul>
+<li>常用命令<ul>
+<li>Ⅰ.添加、删除、遍历、判断是否存在、获取集合大小</li>
+<li>Ⅱ.<strong>随机</strong>取出n个元素</li>
+<li>Ⅲ.<strong>集合运算</strong></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs bash">Ⅰ.<br><span class="hljs-comment"># 添加元素</span><br>sAdd 【key】 【member】 [member ...]<br><span class="hljs-comment"># 删除元素</span><br>sRem 【key】 【member】 [member ...]<br><span class="hljs-comment"># 遍历集合中的所有元素</span><br>sMembers 【key】<br><span class="hljs-comment"># 判断元素是否在集合中</span><br>sIsMember 【key】 【member】<br><span class="hljs-comment"># 获取集合中的元素总数</span><br>sCard 【key】<br><br>Ⅱ.<br><span class="hljs-comment"># 从集合中随机弹出一个元素，元素不删除</span><br>sRandMember 【key】 [数字]<br><span class="hljs-comment"># 从集合中随机弹出一个元素，出一个删一个</span><br>spop 【key】 [数字]<br><br>Ⅲ.<br><span class="hljs-comment"># 集合的差集运算A-B[-c]，属于A但不属于B[和c]的元素构成的集合</span><br>sDiff keyA [keyB keyc...]<br><br><span class="hljs-comment"># 集合的交集运算 A∩B，属于A同时也属于B的共同拥有的元素构成的集合</span><br>sInter keyA [keyB ...]<br><br><span class="hljs-comment"># 集合的并集运算 AUB，属于A或者属于B的元素合并后的集合</span><br>sUnion keyA [keyB ...]<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>应用场景<ul>
+<li>微信抽奖小程序</li>
+<li>微信朋友圈点赞</li>
+<li>微博好友关注社交关系，共同关注的人，我关注的人也关注他(大家爱好相同)</li>
+<li>QQ内推可能认识的人</li>
+</ul>
+</li>
+</ul>
+<h2 id="ZSet（SortedSet）"><a href="#ZSet（SortedSet）" class="headerlink" title="ZSet（SortedSet）"></a>ZSet（SortedSet）</h2><p><strong>向有序集合中加入一个元素和该元素的分数</strong></p>
+<ul>
+<li>常用命令<ul>
+<li>Ⅰ.增删改查元素</li>
+<li>Ⅱ.获取指定分数范围的元素</li>
+<li>Ⅲ.增加某个元素的分数</li>
+<li>Ⅳ.按照排名范围删除元素</li>
+<li>Ⅴ.获取元素的排名</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs bash">Ⅰ.<br><span class="hljs-comment"># 添加元素</span><br>zAdd 【key】 【score】 【member】 [score member ...]<br><span class="hljs-comment"># 按照元素分数从小到大的顺序，返回索引从start到stop之间的所有元素</span><br>zRange  【start】 【stop】 [WITHSCORES]<br><span class="hljs-comment"># 获取元素的分数</span><br>zScore 【key】 【member】<br><span class="hljs-comment"># 删除元素</span><br>zRem 【key】 【member】 [member ...]<br><span class="hljs-comment"># 获取集合中元素的数量</span><br>zCard key<br><br>Ⅱ.<br><span class="hljs-comment"># 获取指定分数范围的元素</span><br>zRangeByScore 【key】 【min】 【max】 [WITHSCORES] [LIMIT offset count]<br><br>Ⅲ.<br><span class="hljs-comment"># 增加某个元素的分数</span><br>zIncrBy 【key】 【increment】 【member】<br><br>Ⅳ.<br><span class="hljs-comment"># 按照排名范围删除元素</span><br>zRemRangeByRank 【key】 【start】 【stop】<br><br>Ⅴ.<br><span class="hljs-comment"># 获取元素的排名 - 从小到大</span><br>zRank 【key】 【member】<br><span class="hljs-comment"># 获取元素的排名 - 从大到小</span><br>zRevRank 【key】 【member】<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>应用场景<ul>
+<li>根据商品销售对商品进行排序显示<blockquote>
+<p>思路：定义商品销售排行榜(sorted set集合)，key为goods:sellsort，分数为商品销售数量。<br>商品编号1001的销量是9，商品编号1002的销量是15。【zadd goods:sellsort 9 1001 15 1002】<br>有一个客户又买了2件商品1001，商品编号1001销量加2。【zincrby goods:sellsort 2 1001】<br>求商品销量前10名。【zRange goods:sellsort 0 10 withscores】</p>
+</blockquote>
+</li>
+<li>热搜</li>
+</ul>
+</li>
+</ul>
+<h1 id="3种-新-类型"><a href="#3种-新-类型" class="headerlink" title="3种 新? 类型"></a>3种 新? 类型</h1><ul>
+<li><p>为什么出来这3个类型？</p>
+<blockquote>
+<p>亿级数据的收集+统计</p>
+</blockquote>
+</li>
+<li><p>统计的类型有哪些？</p>
+<ul>
+<li>聚合统计，统计多个集合元素的聚合结果，就是前面讲解过的交差并等集合统计，交并差集和聚合函数的应用。</li>
+<li>排序统计，在⾯对需要展示最新列表、排行榜等场景时，如果数据更新频繁或者需要分页显示，建议使⽤ZSet。</li>
+<li>二值统计，集合元素的取值就只有0和1两种，如签到打卡的场景中。见<strong>BitMap</strong></li>
+<li>基数统计，指统计⼀个集合中不重复的元素个数，见<strong>HyperLogLog</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="BitMap"><a href="#BitMap" class="headerlink" title="BitMap"></a>BitMap</h2><h3 id="是什么？"><a href="#是什么？" class="headerlink" title="是什么？"></a>是什么？</h3><p><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/BitMap.png" srcset="/img/loading.gif" lazyload alt="BitMap"></p>
+<p><strong>是用String类型作为底层数据结构实现的一种统计二值状态的数据类型</strong></p>
+<p>位图本质是数组，它是<strong>基于String数据类型</strong>的按位的操作。<br>该数组由多个二进制位组成，每个二进制位都对应一个偏移量(我们可以称之为一个索引或者位格)。<br>Bitmap支持的最大位数是2^32位，它可以极大的节约存储空间，使用512M内存就可以存储多大42.9亿的字节信息(2^32 &#x3D; 4294967296)</p>
+<blockquote>
+<p>按年去存储一个用户的签到情况，365天只需要365&#x2F;8≈46Byte<br>1000W用户量一年也只需要44MB就足够了。<br>假如是亿级的系统，每天使用1个1亿位的Bitmap约占12MB的内存（10^8&#x2F;8&#x2F;1024&#x2F;1024），<br>10天的Bitmap的内存开销约为120MB，内存压力不算太高。<br>在实际使用时，最好对Bitmap设置过期时间，让Redis自动删除不再需要的签到记录以节省内存开销。</p>
+</blockquote>
+<h3 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h3><p><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4.png" srcset="/img/loading.gif" lazyload alt="基本命令.png"></p>
+<p><strong>Bitmap的偏移量是从零开始算的</strong></p>
+<ul>
+<li><p><strong>set和get</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># setbit 键 偏移位 只能零或者1 </span><br>setbit 【key】 【offset】 【value】<br><span class="hljs-comment"># 获取指定位的值</span><br>getbit 【key】 【offset】<br></code></pre></td></tr></table></figure>
+<p><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/setbit.png" srcset="/img/loading.gif" lazyload alt="setbit"></p>
+</li>
+<li><p><strong>count</strong>统计有多少个<strong>1</strong></p>
+</li>
+<li><p><strong>bitop</strong><br>获取连续2天都签到的用户？<br>加入某个网站或者系统，它的用户有1000W，做个用户id和位置的映射。<br>比如0号位对应用户id：uid-092iok-lkj<br>比如1号位对应用户id：uid-7388c-xxx<br><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/bitop.png" srcset="/img/loading.gif" lazyload alt="bitop"></p>
+</li>
+</ul>
+<h2 id="HyperLogLog"><a href="#HyperLogLog" class="headerlink" title="HyperLogLog"></a>HyperLogLog</h2><h3 id="是什么？-1"><a href="#是什么？-1" class="headerlink" title="是什么？"></a>是什么？</h3><p><strong>去重复统计功能的<code>基数估计算法</code>-就是HyperLogLog <code>(String)</code></strong></p>
+<p>基数：是一种数据集，去重复后的真实个数<br>基数统计：用于统计一个集合中不重复的元素个数，就是对集合去重复后剩余元素的计算<br>基数统计就是HyperLogLog<br><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/HyperLogLog.png" srcset="/img/loading.gif" lazyload alt="HyperLogLog"></p>
+<h3 id="基本命令-1"><a href="#基本命令-1" class="headerlink" title="基本命令"></a>基本命令</h3><p><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/hll%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4.png" srcset="/img/loading.gif" lazyload alt="hll基本命令"></p>
+<h3 id="原理说明？"><a href="#原理说明？" class="headerlink" title="原理说明？"></a>原理说明？</h3><ul>
+<li>只是进行不重复的基数统计，不是集合也不保存数据，只记录数量而不是具体内容。</li>
+<li>有误差，非精确统计，牺牲准确率来换取空间，误差仅仅只是<strong>0.81%左右</strong><blockquote>
+<p>这个误差如何来的?论文地址和出处??<br><a target="_blank" rel="noopener" href="http://antirez.com/news/75">http://antirez.com/news/75</a><br><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/Redis%E4%B9%8B%E7%88%B6%E5%AE%89%E8%92%82%E9%9B%B7%E6%96%AF%E5%9B%9E%E7%AD%94.png" srcset="/img/loading.gif" lazyload alt="Redis之父安蒂雷斯回答"></p>
+</blockquote>
+</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li>网站首页亿级UV的Redis统计方案</li>
+</ul>
+<h2 id="GEO"><a href="#GEO" class="headerlink" title="GEO"></a>GEO</h2><p><strong>底层type类型为ZSet</strong></p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><blockquote>
+<p>GeoHash核心原理解析：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/LBSer/p/3310455.html">https://www.cnblogs.com/LBSer/p/3310455.html</a></p>
+</blockquote>
+<p><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/%E5%9C%B0%E5%9B%BE%E4%B8%89%E6%AD%A5.png" srcset="/img/loading.gif" lazyload alt="地图三步"><br>主要分为三步：<br>1.将三维的地球变为二维的坐标<br>2.在将二维的坐标转换为一维的点块<br>3.最后将一维的点块转换为二进制再通过base32编码</p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><h4 id="geoAdd"><a href="#geoAdd" class="headerlink" title="geoAdd"></a>geoAdd</h4><ul>
+<li><strong>geoAdd</strong> 多个经度(longitude)、纬度(latitude)、位置名称(member)添加到指定的 key 中<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">geoAdd city 116.403963 39.915119 <span class="hljs-string">&quot;天安门&quot;</span> 116.403414 39.924091 <span class="hljs-string">&quot;故宫&quot;</span> 116.024067 40.362639 <span class="hljs-string">&quot;长城&quot;</span><br></code></pre></td></tr></table></figure>
+<img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoAdd.png" srcset="/img/loading.gif" lazyload alt="geoAdd"></li>
+</ul>
+<h4 id="geoHash"><a href="#geoHash" class="headerlink" title="geoHash"></a>geoHash</h4><ul>
+<li><strong>geoHash</strong> 返回一个或多个位置元素的 Geohash 表示<br><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoHash.png" srcset="/img/loading.gif" lazyload alt="geoHash"></li>
+</ul>
+<h4 id="geoPos"><a href="#geoPos" class="headerlink" title="geoPos"></a>geoPos</h4><ul>
+<li><strong>geoPos</strong> 从键里面返回所有给定位置元素的位置（经度和纬度）<br><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoPos.png" srcset="/img/loading.gif" lazyload alt="geoPos"></li>
+</ul>
+<h4 id="geoDist"><a href="#geoDist" class="headerlink" title="geoDist"></a>geoDist</h4><ul>
+<li><strong>geoDist</strong> 返回两个给定位置之间的距离。<br><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoDist.png" srcset="/img/loading.gif" lazyload alt="geoDist"></li>
+</ul>
+<h4 id="geoRadius"><a href="#geoRadius" class="headerlink" title="geoRadius"></a>geoRadius</h4><ul>
+<li><strong>geoRadius</strong> 以给定的经纬度为中心， 返回与中心的距离不超过给定最大距离的所有位置元素。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># WITHDIST: 在返回位置元素的同时，将位置元素与中心之间的距离也一并返回。距离的单位和用户给定的范围单位保持一致。</span><br><span class="hljs-comment"># WITHCOORD: 将位置元素的经度和维度也一并返回。</span><br><span class="hljs-comment"># WITHHASH: 以 52 位有符号整数的形式，返回位置元素经过原始geohash编码的有序集合分值。这个选项主要用于底层应用或者调试，实际中的作用并不大</span><br><span class="hljs-comment"># COUNT 限定返回的记录数。</span><br>geoRadius city 116.418017 39.914402 10 km withdist withcoord count 10 withhash des<br></code></pre></td></tr></table></figure>
+<img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoRadius.png" srcset="/img/loading.gif" lazyload alt="geoRadius"></li>
+</ul>
+<h4 id="geoRadiusByMember"><a href="#geoRadiusByMember" class="headerlink" title="geoRadiusByMember"></a>geoRadiusByMember</h4><ul>
+<li><strong>geoRadiusByMember</strong> 跟geoRadius类似<br><img src="/images/Redis(%E4%B8%89)-9%E5%A4%A7%E7%B1%BB%E5%9E%8B/geoRadiusByMember.png" srcset="/img/loading.gif" lazyload alt="geoRadiusByMember"></li>
+</ul>
+<h3 id="应用场景-1"><a href="#应用场景-1" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li><p>地图位置附近的酒店推送</p>
+</li>
+<li><p>上方命令Java示例代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">import</span> io.swagger.annotations.ApiOperation;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.data.geo.Distance;<br><span class="hljs-keyword">import</span> org.springframework.data.geo.GeoResults;<br><span class="hljs-keyword">import</span> org.springframework.data.geo.Metrics;<br><span class="hljs-keyword">import</span> org.springframework.data.geo.Point;<br><span class="hljs-keyword">import</span> org.springframework.data.geo.Circle;<br><span class="hljs-keyword">import</span> org.springframework.data.redis.connection.RedisGeoCommands;<br><span class="hljs-keyword">import</span> org.springframework.data.redis.core.RedisTemplate;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestMethod;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-keyword">import</span> java.util.HashMap;<br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.Map;<br><br><br><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">GeoController</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">CITY</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;city&quot;</span>;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> RedisTemplate redisTemplate;<br><br>    <span class="hljs-meta">@ApiOperation(&quot;新增天安门故宫长城经纬度&quot;)</span><br>    <span class="hljs-meta">@RequestMapping(value = &quot;/geoadd&quot;, method = RequestMethod.POST)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">geoAdd</span><span class="hljs-params">()</span> &#123;<br>        Map&lt;String, Point&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        map.put(<span class="hljs-string">&quot;天安门&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Point</span>(<span class="hljs-number">116.403963</span>, <span class="hljs-number">39.915119</span>));<br>        map.put(<span class="hljs-string">&quot;故宫&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Point</span>(<span class="hljs-number">116.403414</span>, <span class="hljs-number">39.924091</span>));<br>        map.put(<span class="hljs-string">&quot;长城&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Point</span>(<span class="hljs-number">116.024067</span>, <span class="hljs-number">40.362639</span>));<br><br>        redisTemplate.opsForGeo().add(CITY, map);<br><br>        <span class="hljs-keyword">return</span> map.toString();<br>    &#125;<br><br>    <span class="hljs-meta">@ApiOperation(&quot;获取地理位置的坐标&quot;)</span><br>    <span class="hljs-meta">@RequestMapping(value = &quot;/geopos&quot;, method = RequestMethod.GET)</span><br>    <span class="hljs-keyword">public</span> Point <span class="hljs-title function_">position</span><span class="hljs-params">(String member)</span> &#123;<br>        <span class="hljs-comment">//获取经纬度坐标</span><br>        List&lt;Point&gt; list = <span class="hljs-built_in">this</span>.redisTemplate.opsForGeo().position(CITY, member);<br>        <span class="hljs-keyword">return</span> list.get(<span class="hljs-number">0</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@ApiOperation(&quot;geohash算法生成的base32编码值&quot;)</span><br>    <span class="hljs-meta">@RequestMapping(value = &quot;/geohash&quot;, method = RequestMethod.GET)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">hash</span><span class="hljs-params">(String member)</span> &#123;<br>        <span class="hljs-comment">//geohash算法生成的base32编码值</span><br>        List&lt;String&gt; list = <span class="hljs-built_in">this</span>.redisTemplate.opsForGeo().hash(CITY, member);<br>        <span class="hljs-keyword">return</span> list.get(<span class="hljs-number">0</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@ApiOperation(&quot;计算两个位置之间的距离&quot;)</span><br>    <span class="hljs-meta">@RequestMapping(value = &quot;/geodist&quot;, method = RequestMethod.GET)</span><br>    <span class="hljs-keyword">public</span> Distance <span class="hljs-title function_">distance</span><span class="hljs-params">(String member1, String member2)</span> &#123;<br>        <span class="hljs-type">Distance</span> <span class="hljs-variable">distance</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.redisTemplate.opsForGeo().distance(CITY, member1, member2, RedisGeoCommands.DistanceUnit.KILOMETERS);<br>        <span class="hljs-keyword">return</span> distance;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 通过经度，纬度查找附近的</span><br><span class="hljs-comment">     * 北京王府井位置116.418017,39.914402,这里为了方便讲课，故意写死</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@ApiOperation(&quot;通过经度，纬度查找附近的&quot;)</span><br>    <span class="hljs-meta">@RequestMapping(value = &quot;/georadius&quot;, method = RequestMethod.GET)</span><br>    <span class="hljs-keyword">public</span> GeoResults <span class="hljs-title function_">radiusByxy</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">//这个坐标是北京王府井位置</span><br>        <span class="hljs-type">Circle</span> <span class="hljs-variable">circle</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Circle</span>(<span class="hljs-number">116.418017</span>, <span class="hljs-number">39.914402</span>, Metrics.MILES.getMultiplier());<br>        <span class="hljs-comment">//返回50条</span><br>        RedisGeoCommands.<span class="hljs-type">GeoRadiusCommandArgs</span> <span class="hljs-variable">args</span> <span class="hljs-operator">=</span> RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs().includeDistance().includeCoordinates().sortAscending().limit(<span class="hljs-number">10</span>);<br>        GeoResults&lt;RedisGeoCommands.GeoLocation&lt;String&gt;&gt; geoResults = <span class="hljs-built_in">this</span>.redisTemplate.opsForGeo().radius(CITY, circle, args);<br>        <span class="hljs-keyword">return</span> geoResults;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 通过地方查找附近</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@ApiOperation(&quot;通过地方查找附近&quot;)</span><br>    <span class="hljs-meta">@RequestMapping(value = &quot;/georadiusByMember&quot;, method = RequestMethod.GET)</span><br>    <span class="hljs-keyword">public</span> GeoResults <span class="hljs-title function_">radiusByMember</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">member</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;天安门&quot;</span>;<br>        <span class="hljs-comment">//返回50条</span><br>        RedisGeoCommands.<span class="hljs-type">GeoRadiusCommandArgs</span> <span class="hljs-variable">args</span> <span class="hljs-operator">=</span> RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs().includeDistance().includeCoordinates().sortAscending().limit(<span class="hljs-number">10</span>);<br>        <span class="hljs-comment">//半径10公里内</span><br>        <span class="hljs-type">Distance</span> <span class="hljs-variable">distance</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Distance</span>(<span class="hljs-number">10</span>, Metrics.KILOMETERS);<br>        GeoResults&lt;RedisGeoCommands.GeoLocation&lt;String&gt;&gt; geoResults = <span class="hljs-built_in">this</span>.redisTemplate.opsForGeo().radius(CITY, member, distance, args);<br>        <span class="hljs-keyword">return</span> geoResults;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Java/Redis/" class="category-chain-item">Redis</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Redis(三)-9大类型</div>
+      <div>http://nullaman.com/2022/06/30/Redis(三)-9大类型/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>aman</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月30日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/28/Redis(%E4%BA%8C)-SpringBoot%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" title="Redis(二)-SpringBoot基本使用">
+                        <span class="hidden-mobile">Redis(二)-SpringBoot基本使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/nullaman" target="_blank" rel="nofollow noopener"><span>阿瞒</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/nullaman" target="_blank" rel="nofollow noopener"><span>aman</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
